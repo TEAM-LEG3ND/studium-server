@@ -1,5 +1,3 @@
-import { LargeNumberLike } from "crypto";
-
 export class RecruitArticle{
     id: number;
     title:string;
