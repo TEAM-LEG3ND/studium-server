@@ -75,7 +75,7 @@ Nest is [MIT licensed](LICENSE).
 
 ## Prisma
 ```bash
-#run migrations
+#run migrations every time you add/edit a new model
 $ npm prisma migrate 
 #open prisma studio
 $ npx prisma studio

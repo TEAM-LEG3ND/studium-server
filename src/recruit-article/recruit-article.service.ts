@@ -1,36 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RecruitArticle } from './entities/recruit-article.entity';
-import { CreateRecruitArticleDTO } from './dto/create-recruit-article.dto';
-import { UpdateRecruitArticleDTO } from './dto/update-recruit-article.dto';
+import { RecruitArticle } from '@prisma/client'
+import { RecruitArticleRepository } from './recruit-article.repository';
+
 @Injectable()
 export class RecruitArticleService {
-    private articles: RecruitArticle[] = [];
+    constructor(private repository: RecruitArticleRepository) {}
 
-    getAll(): RecruitArticle[] {
-        return this.articles;
-    }
-    getOne(id: number): RecruitArticle {
-        const article = this.articles.find(article => article.id === id);
-        if (!article) {
-          throw new NotFoundException(`Article with ID ${id} not found.`);
-        }
-        return article;
-    }
 
-    create(articleData: CreateRecruitArticleDTO){
-        this.articles.push({
-            id:this.articles.length + 1,
-            ...articleData,
+    async createRecruitArticle(
+        params: { title: RecruitArticle[`title`];
+        duration: RecruitArticle['duration'];
+        recruiting: RecruitArticle['recruiting'];
+        recruited: RecruitArticle['recruited'];
+        content: RecruitArticle['content'];
+        tags: RecruitArticle['tags']  }) {
+        const { title,duration,recruiting,recruited,content,tags } = params;
+    
+        // call repository layer
+        const recruitArticle = await this.repository.createRecruitArticle({
+          data: {
+            title,
+            duration,
+            recruiting,
+            recruited,
+            content,
+            tags,
+          },
         });
-    }
-    deleteOne(id: number) {
-        this.getOne(id);
-        this.articles = this.articles.filter(article => article.id !== id);
+    
+        // do other things in the service layer... e.g. send email of tweet
+    
+        return recruitArticle;
     }
 
-    update(id: number, updateData: UpdateRecruitArticleDTO) {
-        const article = this.getOne(id);
-        this.deleteOne(id);
-        this.articles.push({ ...article, ...updateData });
+    async getRecruitArticles() {
+        const recruitArticles = await this.repository.getRecruitArticles({});
+        return recruitArticles;
       }
 }

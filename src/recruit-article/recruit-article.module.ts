@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { RecruitArticleController } from './recruit-article.controller';
 import { RecruitArticleService } from './recruit-article.service';
 import { PrismaModule } from 'src/database/prisma.module';
+import { RecruitArticleRepository } from './recruit-article.repository';
 
 @Module({
-    controllers:[RecruitArticleController, PrismaModule],
-    providers:[RecruitArticleService],
+    imports:[PrismaModule],
+    providers:[RecruitArticleRepository, RecruitArticleService],
+    exports:[RecruitArticleService],
 })
 export class RecruitArticleModule {}

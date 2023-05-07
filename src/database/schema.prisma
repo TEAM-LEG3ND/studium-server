@@ -18,7 +18,7 @@ model RecruitArticle {
   duration    String
   recruiting  Int
   recruited   Int  
-  description String
+  content     String
   tags        String[]
 }
 
