@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,15 +11,21 @@ async function bootstrap() {
     transform:true,
   }));
 
-  const config = new DocumentBuilder()
-        .setTitle('title example')
-        .setDescription('description example')
-        .setVersion('1.0.0')
-        .build();
+  //api docs config
+  initSwaggerConfig(app);
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api-docs', app, document);
-    
   await app.listen(3000);
 }
+
+function initSwaggerConfig(app: INestApplication): void {
+  const config = new DocumentBuilder()
+  .setTitle('title example')
+  .setDescription('description example')
+  .setVersion('1.0.0')
+  .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
+}
+
 bootstrap();
