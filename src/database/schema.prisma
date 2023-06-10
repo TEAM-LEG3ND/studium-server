@@ -40,8 +40,10 @@ model Study {
   location            String
   recruit_start_date  DateTime
   recruit_end_date    DateTime
-  status              Role              @default(RECRUITING)
+  status              StudyStatus       @default(RECRUITING)
   tags                Tag[]
+  member              Member[]
+  recruitArticle      RecruitArticle[]
 }
 
 model User{
@@ -50,6 +52,9 @@ model User{
   updatedAt           DateTime          @updatedAt
   study_joined        Study[]
   manners             Int
+  membersOf           Member[]
+  recruitArticles     RecruitArticle[]
+  applyForms          ApplyForm[]
 }
 
 model Member{
