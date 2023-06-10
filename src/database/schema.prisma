@@ -11,14 +11,89 @@ datasource db {
 }
 
 model RecruitArticle {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  title       String
-  duration    String
-  recruiting  Int
-  recruited   Int  
-  content     String
-  tags        String[]
+  id                  Int             @id @default(autoincrement())
+  author              User            @relation(fields: [authorId], references: [id])
+  authorId            Int
+  study               Study           @relation(fields: [studyId], references: [id])
+  studyId             Int
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  title               String
+  recruiting          Int
+  recruited           Int  
+  content             String
+  questionnaire       Json
+  apply_forms         ApplyForm[]
+}
+
+model Study {
+  id                  Int               @id @default(autoincrement())
+  leader              User              @relation(fields: [leaderId], references: [id])
+  leaderId            Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  intro               String
+  rules               String[]
+  start_date          DateTime
+  end_date            DateTime
+  max_ppl             Int
+  location            String
+  recruit_start_date  DateTime
+  recruit_end_date    DateTime
+  status              Role              @default(RECRUITING)
+  tags                Tag[]
+}
+
+model User{
+  id                  Int               @id @default(autoincrement())
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  study_joined        Study[]
+  manners             Int
+}
+
+model Member{
+  id                  Int               @id @default(autoincrement())
+  study               Study             @relation(fields: [studyId], references: [id])
+  studyId             Int 
+  user                User              @relation(fields: [userId], references: [id])
+  userId              Int
+  status              MemberStatus      @default(PENDING)
+  type                MemberType        @default(MEMBER)
+}
+
+model Tag {
+  id                  Int               @id @default(autoincrement())
+  name                String            @unique
+  studys              Study[]
+}
+
+model ApplyForm{
+  id                  Int               @id @default(autoincrement())
+  recruit_article     RecruitArticle    @relation(fields: [recruitArticleId], references: [id])
+  recruitArticleId    Int 
+  user                User              @relation(fields: [userId], references: [id])
+  userId              Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  answer              Json
+}
+
+enum StudyStatus{
+  RECRUITING 
+  PROGRESS
+  EVALUATE
+  COMPLETE
+}
+
+enum MemberStatus{
+  PENDING
+  ACTIVE
+  COMPLETE
+}
+
+enum MemberType{
+  LEADER 
+  MEMBER
 }
 
