@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RecruitArticleModule } from 'src/recruit-article/recruit-article.module';
+import { UserModule } from 'src/modules/user/user.module';
 import { ApiController } from './api.controller';
 
 @Module({
-    imports: [RecruitArticleModule],
+    imports: [UserModule],
     controllers: [ApiController],
 })
 export class ApiModule {}

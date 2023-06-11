@@ -1,26 +1,35 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { RecruitArticleService } from 'src/recruit-article/recruit-article.service';
+import { UserService } from 'src/modules/user/user.service';
 
 @Controller('api')
 export class ApiController {
-    constructor(private readonly recruitArticleService: RecruitArticleService) {}
+    constructor(private readonly userService: UserService) {}
 
-    @Post(`recruit-article`)
-    async createRecruitArticle(@Body() data: {  title: string; duration: string; recruiting: number; recruited: number; content: any; tags: string[];  }) {
-        const { title, duration, recruiting, recruited, content, tags } = data;
-        return this.recruitArticleService.createRecruitArticle({
-        title,
-        duration,
-        recruiting,
-        recruited,
-        content,
-        tags,
+    @Post(`user`)
+    async createUser(@Body() data: {  
+        manners: number; 
+        study_joined: string[]; 
+        membersOf: string[]; 
+        recruitArticles: string[]; 
+        applyForms: string[]; 
+    }) {
+        const { manners, study_joined, membersOf, recruitArticles, applyForms } = data;
+        const studyIdArray = [Number(study_joined)];
+        const membersIdArray = [Number(membersOf)];
+        const recruitIdArray = [Number(recruitArticles)];
+        const applyFormIdArray = [Number(applyForms)];
+        return this.userService.createUser({
+        manners,
+        study_joined: studyIdArray,
+        membersOf : membersIdArray,
+        recruitArticles : recruitIdArray,
+        applyForms : applyFormIdArray,
         });
     }
 
-    @Get('recruit-article')
-    getRecruitArticles(){
-        return this.recruitArticleService.getRecruitArticles();
+    @Get('user')
+    getUsers(){
+        return this.userService.getUsers();
     }
 
 
