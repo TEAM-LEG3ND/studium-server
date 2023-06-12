@@ -3,6 +3,9 @@
 
   - You are about to drop the column `duration` on the `RecruitArticle` table. All the data in the column will be lost.
   - You are about to drop the column `tags` on the `RecruitArticle` table. All the data in the column will be lost.
+  - Added the required column `authorId` to the `RecruitArticle` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `questionnaire` to the `RecruitArticle` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `studyId` to the `RecruitArticle` table without a default value. This is not possible if the table is not empty.
 
 */
 -- CreateEnum
@@ -17,17 +20,16 @@ CREATE TYPE "MemberType" AS ENUM ('LEADER', 'MEMBER');
 -- AlterTable
 ALTER TABLE "RecruitArticle" DROP COLUMN "duration",
 DROP COLUMN "tags",
-ADD COLUMN     "authorId" INTEGER,
-ADD COLUMN     "questionnaire" JSONB,
-ADD COLUMN     "studyId" INTEGER,
-ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+ADD COLUMN     "authorId" INTEGER NOT NULL,
+ADD COLUMN     "questionnaire" JSONB NOT NULL,
+ADD COLUMN     "studyId" INTEGER NOT NULL;
 
 -- CreateTable
 CREATE TABLE "Study" (
     "id" SERIAL NOT NULL,
     "leaderId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "intro" TEXT NOT NULL,
     "rules" TEXT[],
     "start_date" TIMESTAMP(3) NOT NULL,
@@ -45,7 +47,7 @@ CREATE TABLE "Study" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "manners" INTEGER NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -76,7 +78,7 @@ CREATE TABLE "ApplyForm" (
     "recruitArticleId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "answer" JSONB NOT NULL,
 
     CONSTRAINT "ApplyForm_pkey" PRIMARY KEY ("id")
@@ -98,10 +100,10 @@ CREATE UNIQUE INDEX "_StudyToTag_AB_unique" ON "_StudyToTag"("A", "B");
 CREATE INDEX "_StudyToTag_B_index" ON "_StudyToTag"("B");
 
 -- AddForeignKey
-ALTER TABLE "RecruitArticle" ADD CONSTRAINT "RecruitArticle_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "RecruitArticle" ADD CONSTRAINT "RecruitArticle_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RecruitArticle" ADD CONSTRAINT "RecruitArticle_studyId_fkey" FOREIGN KEY ("studyId") REFERENCES "Study"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "RecruitArticle" ADD CONSTRAINT "RecruitArticle_studyId_fkey" FOREIGN KEY ("studyId") REFERENCES "Study"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Study" ADD CONSTRAINT "Study_leaderId_fkey" FOREIGN KEY ("leaderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

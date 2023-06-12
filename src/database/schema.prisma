@@ -23,7 +23,7 @@ model RecruitArticle {
   recruited           Int  
   content             String
   questionnaire       Json
-  apply_forms         ApplyForm[]
+  applyForms          ApplyForm[]
 }
 
 model Study {
@@ -34,12 +34,12 @@ model Study {
   updatedAt           DateTime          @updatedAt
   intro               String
   rules               String[]
-  start_date          DateTime
-  end_date            DateTime
+  startDate           DateTime
+  endDate             DateTime
   max_ppl             Int
   location            String
-  recruit_start_date  DateTime
-  recruit_end_date    DateTime
+  recruitStartDate    DateTime
+  recruitEndDate      DateTime
   status              StudyStatus       @default(RECRUITING)
   tags                Tag[]
   member              Member[]
@@ -50,7 +50,7 @@ model User{
   id                  Int               @id @default(autoincrement())
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-  study_joined        Study[]         
+  studyJoined         Study[]           
   manners             Int
   membersOf           Member[]
   recruitArticles     RecruitArticle[]
@@ -75,7 +75,7 @@ model Tag {
 
 model ApplyForm{
   id                  Int               @id @default(autoincrement())
-  recruit_article     RecruitArticle    @relation(fields: [recruitArticleId], references: [id])
+  recruitArticle      RecruitArticle    @relation(fields: [recruitArticleId], references: [id])
   recruitArticleId    Int 
   user                User              @relation(fields: [userId], references: [id])
   userId              Int

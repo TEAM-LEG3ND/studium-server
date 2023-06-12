@@ -8,19 +8,19 @@ export class ApiController {
     @Post(`user`)
     async createUser(@Body() data: {  
         manners: number; 
-        study_joined: string[]; 
+        studyJoined: string[]; 
         membersOf: string[]; 
         recruitArticles: string[]; 
         applyForms: string[]; 
     }) {
-        const { manners, study_joined, membersOf, recruitArticles, applyForms } = data;
-        const studyIdArray = [Number(study_joined)];
+        const { manners, studyJoined, membersOf, recruitArticles, applyForms } = data;
+        const studyIdArray = [Number(studyJoined)];
         const membersIdArray = [Number(membersOf)];
         const recruitIdArray = [Number(recruitArticles)];
         const applyFormIdArray = [Number(applyForms)];
         return this.userService.createUser({
         manners,
-        study_joined: studyIdArray,
+        studyJoined: studyIdArray,
         membersOf : membersIdArray,
         recruitArticles : recruitIdArray,
         applyForms : applyFormIdArray,

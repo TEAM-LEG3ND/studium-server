@@ -9,7 +9,7 @@ export class UserService {
     async createUser(
         params: { 
             manners: User['manners'];
-            study_joined?: Study[`id`][];
+            studyJoined?: Study[`id`][];
             membersOf?: Member['id'][];
             recruitArticles?: RecruitArticle['id'][];
             applyForms?: ApplyForm['id'][] 
@@ -20,7 +20,7 @@ export class UserService {
         const user = await this.repository.createUser({
           data: {
             manners : 0,
-            study_joined: undefined,
+            studyJoined: undefined,
             membersOf: undefined,
             recruitArticles: undefined,
             applyForms: undefined,
