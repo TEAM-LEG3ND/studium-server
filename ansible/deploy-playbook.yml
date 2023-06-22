@@ -12,13 +12,13 @@
         reauthorize: yes
     - name: Pull Docker Image
       become: True
-      shell: /usr/local/bin/docker compose pull leg3nd-agora
+      shell: /usr/local/bin/docker compose pull studium-server
       args:
         chdir: /Users/{{ user }}/Server
         executable: /bin/zsh
     - name: Restart Container
       become: True
-      shell: /usr/local/bin/docker compose up -d leg3nd-agora --force-recreate
+      shell: /usr/local/bin/docker compose up -d studium-server --force-recreate
       args:
         chdir: /Users/{{ user }}/Server
         executable: /bin/zsh
