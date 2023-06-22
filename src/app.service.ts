@@ -5,7 +5,6 @@ export class AppService {
   constructor(@Inject(Logger) private readonly logger: LoggerService) {}
 
   getHello(): string {
-    this.logger.warn('hello world!');
-    return 'Hello World!';
+    return 'Hello Studium!';
   }
 }
