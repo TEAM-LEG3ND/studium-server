@@ -1,10 +1,15 @@
-import { ValidationPipe, INestApplication } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { WinstonModule } from 'nest-winston';
+import { initSwaggerConfig } from './config/swagger-config';
+import { initWinstonConfigInstance } from './config/winston-logger-config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger(initWinstonConfigInstance()),
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, //ignore unknow properties
@@ -17,17 +22,6 @@ async function bootstrap() {
   initSwaggerConfig(app);
 
   await app.listen(3000);
-}
-
-function initSwaggerConfig(app: INestApplication): void {
-  const config = new DocumentBuilder()
-    .setTitle('title example')
-    .setDescription('description example')
-    .setVersion('1.0.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
 }
 
 bootstrap();
