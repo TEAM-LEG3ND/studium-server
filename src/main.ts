@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger(initWinstonConfigInstance()),
   });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, //ignore unknow properties
@@ -21,6 +22,17 @@ async function bootstrap() {
   initSwaggerConfig(app);
 
   await app.listen(3000);
+}
+
+function initSwaggerConfig(app: INestApplication): void {
+  const config = new DocumentBuilder()
+    .setTitle('title example')
+    .setDescription('description example')
+    .setVersion('1.0.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
 }
 
 bootstrap();

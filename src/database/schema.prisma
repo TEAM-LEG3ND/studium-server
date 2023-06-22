@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Study {
+  id               Int         @id @default(autoincrement())
+  leader           User        @relation(fields: [leaderId], references: [id])
+  leaderId         Int
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  title            String
+  name             String
+  intro            String
+  rules            String[]
+  startDate        DateTime
+  endDate          DateTime
+  max_ppl          Int
+  location         String
+  recruitStartDate DateTime
+  recruitEndDate   DateTime
+  recruiting       Int
+  recruited        Int
+  questionnaire    Json
+  studyTemplate    String
+  applyForms       ApplyForm[]
+  status           StudyStatus @default(RECRUITING)
+  tags             Tag[]
+  member           Member[]
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  studyJoined Study[]
+  manners     Int
+  membersOf   Member[]
+  applyForms  ApplyForm[]
+}
+
+model Member {
+  id      Int          @id @default(autoincrement())
+  study   Study        @relation(fields: [studyId], references: [id])
+  studyId Int
+  user    User         @relation(fields: [userId], references: [id])
+  userId  Int
+  status  MemberStatus @default(PENDING)
+  type    MemberType   @default(MEMBER)
+}
+
+model Tag {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  studys Study[]
+}
+
+model ApplyForm {
+  id        Int      @id @default(autoincrement())
+  study     Study    @relation(fields: [studyId], references: [id])
+  studyId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answer    Json
+}
+
+enum StudyStatus {
+  RECRUITING
+  PROGRESS
+  EVALUATE
+  COMPLETE
+}
+
+enum MemberStatus {
+  PENDING
+  ACTIVE
+  COMPLETE
+}
+
+enum MemberType {
+  LEADER
+  MEMBER
+}

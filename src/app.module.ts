@@ -1,10 +1,11 @@
 import { Module, Logger } from '@nestjs/common';
-import { RecruitArticleModule } from './recruit-article/recruit-article.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ApiModule } from './api/api.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
-  imports: [RecruitArticleModule],
+  imports: [ApiModule, UserModule],
   controllers: [AppController],
   providers: [AppService, Logger],
 })
