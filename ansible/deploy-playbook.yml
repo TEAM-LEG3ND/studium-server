@@ -1,0 +1,24 @@
+- hosts: all
+  vars_files:
+    - secrets.yml
+  remote_user: "{{ user }}"
+  become_user: "{{ user }}"
+  tasks:
+    - name: Log into private registry and force re-authorization
+      docker_login:
+        registry: "{{ registry_host }}"
+        username: "{{ registry_user }}"
+        password: "{{ registry_password }}"
+        reauthorize: yes
+    - name: Pull Docker Image
+      become: True
+      shell: /usr/local/bin/docker compose pull studium-server
+      args:
+        chdir: /Users/{{ user }}/Server
+        executable: /bin/zsh
+    - name: Restart Container
+      become: True
+      shell: /usr/local/bin/docker compose up -d studium-server --force-recreate
+      args:
+        chdir: /Users/{{ user }}/Server
+        executable: /bin/zsh
