@@ -2,6 +2,7 @@ import { Module, Logger } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AppService } from './app.service';
       //   module: SampleModule,
       // }
     ]),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
