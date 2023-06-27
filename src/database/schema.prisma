@@ -22,7 +22,6 @@ model Study {
   rules            String[]
   startDate        DateTime
   endDate          DateTime
-  max_ppl          Int
   location         String
   recruitStartDate DateTime
   recruitEndDate   DateTime
@@ -74,10 +73,10 @@ model ApplyForm {
 }
 
 enum StudyStatus {
+  INACTIVE
   RECRUITING
-  PROGRESS
-  EVALUATE
-  COMPLETE
+  ACTIVE
+  EVALUATION
 }
 
 enum MemberStatus {
