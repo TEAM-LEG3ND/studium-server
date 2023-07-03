@@ -6,13 +6,13 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    RouterModule.register([
-      // {
-      //   path: 'sample-path',
-      //   module: SampleModule,
-      // }
-    ]),
     UserModule,
+    RouterModule.register([
+      {
+        path: 'user',
+        module: UserModule,
+      }
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
