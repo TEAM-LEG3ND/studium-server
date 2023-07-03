@@ -7,6 +7,7 @@ export class UpdateUserDto{
     @ApiProperty()
     readonly studyJoined;
 
+    @IsOptional()
     @ApiProperty()
     @IsNumber()
     readonly manners: number;
