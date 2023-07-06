@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber } from 'class-validator';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class CreateUserDto{
     // todo study, member, applyFroms entitys
@@ -18,4 +18,12 @@ export class CreateUserDto{
     @IsOptional()
     @ApiProperty()
     readonly applyForms;
+
+    @ApiProperty()
+    @IsString()
+    readonly intro: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly profileURL: string;
 }
