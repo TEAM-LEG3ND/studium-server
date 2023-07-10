@@ -11,7 +11,7 @@ import { UserModule } from './user/user.module';
       {
         path: 'user',
         module: UserModule,
-      }
+      },
     ]),
   ],
   controllers: [AppController],
