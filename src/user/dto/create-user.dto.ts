@@ -3,6 +3,10 @@ import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 
 export class CreateUserDto{
+    @ApiProperty()
+    @IsNumber()
+    readonly universalAccountId: number;
+
     @IsOptional()
     @ApiProperty()
     readonly studyJoined;

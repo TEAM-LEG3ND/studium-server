@@ -20,10 +20,12 @@ export class UpdateUserDto{
     readonly applyForms;
 
     
+    @IsOptional()
     @ApiProperty()
     @IsString()
     readonly intro: string;
 
+    @IsOptional()
     @ApiProperty()
     @IsString()
     readonly profileURL: string;
