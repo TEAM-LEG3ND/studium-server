@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class UpdateUserDto{
-    // todo study, member, applyFroms entitys
     @IsOptional()
     @ApiProperty()
     readonly studyJoined;

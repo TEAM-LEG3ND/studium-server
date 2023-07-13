@@ -1,23 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
-
-export class CreateUserDto{
-    @IsOptional()
+export class GetUserResponseDto{
     @ApiProperty()
-    readonly studyJoined;
+    @IsNumber()
+    readonly id: number;
 
     @ApiProperty()
     @IsNumber()
     readonly manners: number;
-
-    @IsOptional()
-    @ApiProperty()
-    readonly membersof;
-
-    @IsOptional()
-    @ApiProperty()
-    readonly applyForms;
 
     @ApiProperty()
     @IsString()
