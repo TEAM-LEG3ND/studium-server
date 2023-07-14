@@ -1,50 +1,80 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class CreateStudyDto {
+  @IsOptional()
   @ApiProperty()
-  leaderId: number;
+  readonly title;
 
+  @IsOptional()
   @ApiProperty()
-  title: string;
+  readonly name;
 
+  @IsOptional()
   @ApiProperty()
-  name: string;
+  readonly recruitStartDate;
 
+  @IsOptional()
   @ApiProperty()
-  intro: string;
+  readonly recruitEndDate;
 
+  @IsOptional()
+  @ApiProperty()
+  readonly intro;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly startDate;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly endDate;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly location;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  readonly recruiting;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  readonly recruited;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  readonly studyTemplate;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly questionnaire;
+
+
+
+  /*
+  
+
+  @IsOptional()
   @ApiProperty({ type: [String] })
   rules: string[];
 
-  @ApiProperty()
-  startDate: string;
+  
 
-  @ApiProperty()
-  endDate: string;
+  
 
-  @ApiProperty()
-  location: string;
+  
 
-  @ApiProperty()
-  recruitStartDate: string;
+  
 
-  @ApiProperty()
-  recruitEndDate: string;
-
-  @ApiProperty()
-  questionnaire: string;
-
+  @IsOptional()
   @ApiProperty({ required: false, enum: ['RECRUITING', 'PROGRESS', 'EVALUATE', 'COMPLETE'] })
   role: studyStatus;
 
-  @ApiProperty({ required: false })
-  recruiting: number;
+  
 
-  @ApiProperty({ required: false })
-  recruited: number;
+  */
 
-  @ApiProperty({ required: false })
-  studyTemplate: string;
 }
 
 export enum studyStatus {
