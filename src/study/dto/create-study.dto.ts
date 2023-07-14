@@ -1,50 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class CreateStudyDto {
   @IsOptional()
   @ApiProperty()
-  readonly title;
+  @IsString()
+  readonly title : string;
 
   @IsOptional()
   @ApiProperty()
-  readonly name;
+  @IsString()
+  readonly name : string;
 
   @IsOptional()
   @ApiProperty()
-  readonly recruitStartDate;
+  readonly recruitStartDate : Date;
 
   @IsOptional()
   @ApiProperty()
-  readonly recruitEndDate;
+  readonly recruitEndDate : Date;
 
   @IsOptional()
   @ApiProperty()
-  readonly intro;
+  @IsString()
+  readonly intro : string;
 
   @IsOptional()
   @ApiProperty()
-  readonly startDate;
+  readonly startDate : Date;
 
   @IsOptional()
   @ApiProperty()
-  readonly endDate;
+  readonly endDate : Date;
 
   @IsOptional()
   @ApiProperty()
-  readonly location;
+  @IsString()
+  readonly location : string;
 
   @IsOptional()
   @ApiProperty({ required: false })
-  readonly recruiting;
+  @IsNumber()
+  readonly recruiting : number;
 
   @IsOptional()
   @ApiProperty({ required: false })
-  readonly recruited;
+  @IsNumber()
+  readonly recruited : number;
 
   @IsOptional()
   @ApiProperty({ required: false })
-  readonly studyTemplate;
+  @IsString()
+  readonly studyTemplate : string;
 
   @IsOptional()
   @ApiProperty()
