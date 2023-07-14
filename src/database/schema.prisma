@@ -14,12 +14,12 @@ model Study {
   updatedAt        DateTime    @updatedAt
   intro            String
   rules            String[]
-  startDate        DateTime
-  endDate          DateTime
   location         String
   status           StudyStatus @default(RECRUITING)
+  endDate          DateTime
   recruitEndDate   DateTime
   recruitStartDate DateTime
+  startDate        DateTime
   name             String
   questionnaire    Json
   recruited        Int
@@ -33,9 +33,9 @@ model Study {
 }
 
 model User {
-  id                  Int         @id @default(autoincrement())
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
+  id                 Int         @id @default(autoincrement())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
   universalAccountId  Int
   manners             Int
   intro               String
