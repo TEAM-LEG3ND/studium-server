@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateApplyFormDto } from './dto/create-apply-form.dto';
+import { ApplyForm } from '@prisma/client';
 
 @Injectable()
 export class ApplyFormService {
@@ -10,7 +11,7 @@ export class ApplyFormService {
     return await this.prisma.applyForm.findMany();
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<ApplyForm> {
     const applyForm = await this.prisma.applyForm.findUnique({
       where: { id },
       include: { user: true, study: true },
@@ -18,7 +19,7 @@ export class ApplyFormService {
     return applyForm;
   }
 
-  async create(data: CreateApplyFormDto) {
+  async create(data: CreateApplyFormDto): Promise<ApplyForm> {
     const applyForm = await this.prisma.applyForm.create({
       data,
       include: { user: true, study: true },
@@ -26,7 +27,7 @@ export class ApplyFormService {
     return applyForm;
   }
 
-  async update(id: number, data: CreateApplyFormDto) {
+  async update(id: number, data: CreateApplyFormDto): Promise<ApplyForm> {
     const applyForm = await this.prisma.applyForm.update({
       where: { id },
       data,
@@ -35,9 +36,10 @@ export class ApplyFormService {
     return applyForm;
   }
 
-  async deleteById(id: number) {
+  async deleteById(id: number): Promise<void> {
     const applyForm = await this.findById(id);
-    await this.prisma.applyForm.delete({ where: { id } });
-    return applyForm;
+    if (applyForm) {
+      await this.prisma.applyForm.delete({ where: { id } });
+    }
   }
 }
