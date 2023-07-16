@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsNumber, IsString } from 'class-validator';
 
+
 export class CreateUserDto{
-    // todo study, member, applyFroms entitys
+    @ApiProperty()
+    @IsNumber()
+    readonly universalAccountId: number;
+
     @IsOptional()
     @ApiProperty()
     readonly studyJoined;
