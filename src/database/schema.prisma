@@ -14,7 +14,6 @@ model Study {
   updatedAt        DateTime    @updatedAt
   intro            String
   rules            String[]
-  max_ppl          Int
   location         String
   status           StudyStatus @default(RECRUITING)
   endDate          DateTime
@@ -34,9 +33,9 @@ model Study {
 }
 
 model User {
-  id                  Int         @id @default(autoincrement())
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
+  id                 Int         @id @default(autoincrement())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
   universalAccountId  Int
   manners             Int
   intro               String
@@ -74,10 +73,10 @@ model ApplyForm {
 }
 
 enum StudyStatus {
+  INACTIVE
   RECRUITING
-  PROGRESS
-  EVALUATE
-  COMPLETE
+  ACTIVE
+  EVALUATION
 }
 
 enum MemberStatus {

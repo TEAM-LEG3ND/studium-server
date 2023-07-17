@@ -2,6 +2,7 @@ import { Module, Logger } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { StudyModule } from './study/study.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module';
         module: UserModule,
       }
     ]),
+    StudyModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
