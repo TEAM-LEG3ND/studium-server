@@ -7,6 +7,6 @@ export class InternalUserController {
 
     @Get()
     findAll() {
-        return;
+        return this.internalUserService.findAll();
     }
 }
