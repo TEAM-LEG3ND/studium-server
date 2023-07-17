@@ -35,8 +35,6 @@ export class UserService {
       const { id, manners, intro, profileURL }: GetUserResponseDto = user;
       return { id, manners, intro, profileURL };
     }
-    return user;
-  }
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
       const user: User = await this.prisma.user.create({
