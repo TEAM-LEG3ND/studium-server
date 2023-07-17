@@ -4,17 +4,31 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudyModule } from './study/study.module';
 import { UserModule } from './user/user.module';
+import { InfraModule } from './infra/infra.module';
+import { InternalUserModule } from './internal-user/internal-user.module';
 
 @Module({
   imports: [
+    InfraModule,
+    InternalUserModule,
     UserModule,
+    StudyModule,
     RouterModule.register([
       {
         path: 'user',
         module: UserModule,
-      }
+      },
+      {
+        path: 'internal',
+        module: InfraModule,
+        children: [
+          {
+            path: 'user',
+            module: InternalUserModule,
+          },
+        ],
+      },
     ]),
-    StudyModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
