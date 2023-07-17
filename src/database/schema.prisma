@@ -36,13 +36,13 @@ model User {
   id                 Int         @id @default(autoincrement())
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
-  universalAccountId  Int
-  manners             Int
-  intro               String
-  profileURL          String
-  applyForms          ApplyForm[]
-  membersOf           Member[]
-  studyJoined         Study[]
+  universalAccountId Int
+  manners            Int
+  intro              String
+  profileURL         String
+  applyForms         ApplyForm[]
+  membersOf          Member[]
+  studyJoined        Study[]
 }
 
 model Member {
