@@ -19,9 +19,9 @@ export class ApplyFormService {
     return applyForm;
   }
 
-  async create(applyFormCreateDto: CreateApplyFormDto): Promise<ApplyForm> {
+  async create(CreateApplyFormDto: CreateApplyFormDto): Promise<ApplyForm> {
     const applyForm = await this.prisma.applyForm.create({
-      data: { ...applyFormCreateDto },
+      data: { ...CreateApplyFormDto },
       include: { user: true, study: true },
     });
     return applyForm;
