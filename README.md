@@ -83,4 +83,6 @@ Nest is [MIT licensed](LICENSE).
 $ npm run migrate 
 #open prisma studio
 $ npx prisma studio
+#generate prisma client
+$ npx prisma generate
 ```
