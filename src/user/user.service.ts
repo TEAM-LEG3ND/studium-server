@@ -13,13 +13,11 @@ export class UserService {
 
     async findAll(): Promise<GetUserResponseDto[]> {
         const users: User[] = await this.prisma.user.findMany();
-        const responseUsers = [];
-
-        users.forEach((user) => {
+        const responseUsers = users.map((user) => {
             const {id, manners, intro, profileURL}: GetUserResponseDto = user;
-            responseUsers.push({ id, manners, intro, profileURL });
+            return {id, manners, intro, profileURL};
         });
-
+        
         return responseUsers;
     }
 
