@@ -15,10 +15,6 @@ import { InternalUserModule } from './internal-user/internal-user.module';
     StudyModule,
     RouterModule.register([
       {
-        path: 'user',
-        module: UserModule,
-      },
-      {
         path: 'internal',
         module: InfraModule,
         children: [
@@ -28,6 +24,14 @@ import { InternalUserModule } from './internal-user/internal-user.module';
           },
         ],
       },
+      {
+        path: 'user',
+        module: UserModule,
+      },
+      {
+        path: 'study',
+        module: StudyModule,
+      }
     ]),
   ],
   controllers: [AppController],
