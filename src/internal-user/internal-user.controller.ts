@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { InternalUserService } from './internal-user.service';
 
 @Controller()
@@ -8,5 +8,15 @@ export class InternalUserController {
     @Get()
     findAll() {
         return this.internalUserService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.internalUserService.findOne(+id);
+    }
+
+    @Get('#:id')
+    findOneByUniversalId(@Param('id') id: string) {
+        return this.internalUserService.findOneByUniversalId(+id);
     }
 }
