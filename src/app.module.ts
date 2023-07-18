@@ -15,7 +15,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
     StudyModule,
     RouterModule.register([
       {
-        path: 'internal',
+        path: 'internal/api/v1',
         module: InfraModule,
         children: [
           {
@@ -25,11 +25,11 @@ import { InternalUserModule } from './internal-user/internal-user.module';
         ],
       },
       {
-        path: 'user',
+        path: 'api/v1/user',
         module: UserModule,
       },
       {
-        path: 'study',
+        path: 'api/v1/study',
         module: StudyModule,
       }
     ]),
