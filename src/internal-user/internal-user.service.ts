@@ -29,17 +29,4 @@ export class InternalUserService {
         const { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL }: InternalGetUserResponseDto = user;
         return { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL };
     }
-
-    async findOneByUniversalId(universalId: number): Promise<InternalGetUserResponseDto>{
-        const user: User = await this.prisma.user.findUnique({
-            where: { universalAccountId: universalId },
-        });
-
-        if (!user) {
-            throw new NotFoundException(`User with Leg3nd ID: ${universalId} not Found.`);
-        } 
-
-        const { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL }: InternalGetUserResponseDto = user;
-        return { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL };
-    }
 }

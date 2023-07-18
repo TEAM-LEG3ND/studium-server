@@ -14,9 +14,4 @@ export class InternalUserController {
     findOne(@Param('id') id: string) {
         return this.internalUserService.findOne(+id);
     }
-
-    @Get('#:id')
-    findOneByUniversalId(@Param('id') id: string) {
-        return this.internalUserService.findOneByUniversalId(+id);
-    }
 }
