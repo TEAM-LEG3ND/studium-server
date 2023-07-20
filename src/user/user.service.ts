@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,12 +22,16 @@ export class UserService {
     }
 
     async findOne(userId: number): Promise<GetUserResponseDto>{
+        if (isNaN(userId)) {
+            throw new BadRequestException('Bad request for find unique user.');
+        }
+
         const user: User = await this.prisma.user.findUnique({
             where: { id: userId },
         });
 
         if (!user) {
-            throw new NotFoundException(`User with ID: ${userId} not Found.`);
+            throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
         } 
 
         const { id, manners, intro, profileURL }: GetUserResponseDto = user;
