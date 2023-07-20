@@ -7,7 +7,7 @@ import { ApplyForm } from '@prisma/client';
 export class ApplyFormService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<Array<ApplyForm>> {
     return await this.prisma.applyForm.findMany();
   }
 
