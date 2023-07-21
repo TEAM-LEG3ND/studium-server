@@ -3,7 +3,7 @@ import { StudyService } from './study.service';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 
-@Controller('study')
+@Controller()
 export class StudyController {
   constructor(private readonly studyService: StudyService) {}
 
