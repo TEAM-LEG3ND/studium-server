@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,26 +11,28 @@ import { UpdateUserResponseDto } from './dto/update-user-response.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<GetUserResponseDto[]> {
-      const users: User[] = await this.prisma.user.findMany();
-      const responseUsers = [];
-
-      users.forEach((user) => {
-          const {id, manners, intro, profileURL}: GetUserResponseDto = user;
-          responseUsers.push({ id, manners, intro, profileURL });
-      });
+    async findAll(): Promise<GetUserResponseDto[]> {
+        const users: User[] = await this.prisma.user.findMany();
+        const responseUsers = users.map((user) => {
+            const { id, manners, intro, profileURL }: GetUserResponseDto = user;
+            return { id, manners, intro, profileURL };
+        });
 
       return responseUsers;
   }
 
-  async findOne(userId: number): Promise<GetUserResponseDto>{
-      const user: User = await this.prisma.user.findUnique({
-          where: { id: userId },
-      });
+    async findOne(userId: number): Promise<GetUserResponseDto>{
+        if (isNaN(userId)) {
+            throw new BadRequestException('Bad request for find unique user.');
+        }
 
-      if (!user) {
-          throw new NotFoundException(`User with ID: ${userId} not Found.`);
-      } 
+        const user: User = await this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
+        } 
 
       const { id, manners, intro, profileURL }: GetUserResponseDto = user;
       return { id, manners, intro, profileURL };
