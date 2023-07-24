@@ -9,7 +9,7 @@ import { UpdateUserResponseDto } from './dto/update-user-response.dto';
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
     async findAll(): Promise<GetUserResponseDto[]> {
         const users: User[] = await this.prisma.user.findMany();
@@ -18,8 +18,8 @@ export class UserService {
             return { id, manners, intro, profileURL };
         });
 
-        return responseUsers;
-    }
+      return responseUsers;
+  }
 
     async findOne(userId: number): Promise<GetUserResponseDto>{
         if (isNaN(userId)) {
@@ -34,37 +34,37 @@ export class UserService {
             throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
         } 
 
-        const { id, manners, intro, profileURL }: GetUserResponseDto = user;
-        return { id, manners, intro, profileURL };
+      const { id, manners, intro, profileURL }: GetUserResponseDto = user;
+      return { id, manners, intro, profileURL };
     }
 
-    async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
-        const user: User = await this.prisma.user.create({
-            data: {
-                ...createUserDto,
-            },
-        });
+  async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
+      const user: User = await this.prisma.user.create({
+          data: {
+              ...createUserDto,
+          },
+      });
 
-        const { id, createdAt, manners, intro, profileURL }: CreateUserResponseDto = user;
-        return { id, createdAt, manners, intro, profileURL };
-    }
+      const { id, createdAt, manners, intro, profileURL }: CreateUserResponseDto = user;
+      return { id, createdAt, manners, intro, profileURL };
+  }
 
-    async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
-        const getUser: GetUserResponseDto = await this.findOne(userId);
-        const user: User = await this.prisma.user.update({
-            where: { id: getUser['id'] },
-            data: updateUserDto,
-        });
+  async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
+      const getUser: GetUserResponseDto = await this.findOne(userId);
+      const user: User = await this.prisma.user.update({
+          where: { id: getUser['id'] },
+          data: updateUserDto,
+      });
 
-        const { id, updatedAt, manners, intro, profileURL }: UpdateUserResponseDto = user;
-        return { id, updatedAt, manners, intro, profileURL };
-    }
+      const { id, updatedAt, manners, intro, profileURL }: UpdateUserResponseDto = user;
+      return { id, updatedAt, manners, intro, profileURL };
+  }
 
-    async remove(id: number): Promise<void> {
-        const user = await this.findOne(id);
-        await this.prisma.user.delete({
-            where: { id: user['id'] },
-        });
-        return;
-    }
+  async remove(id: number): Promise<void> {
+      const user = await this.findOne(id);
+      await this.prisma.user.delete({
+          where: { id: user['id'] },
+      });
+      return;
+  }
 }
