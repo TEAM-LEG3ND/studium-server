@@ -31,7 +31,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
       {
         path: 'api/v1/study',
         module: StudyModule,
-      }
+      },
     ]),
   ],
   controllers: [AppController],
