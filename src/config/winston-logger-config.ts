@@ -6,19 +6,19 @@ export const initWinstonConfigInstance = () => {
       new transports.File({
         filename: `logs/error.log`,
         level: 'error',
-        format: format.combine(format.timestamp(), format.json()),
+        format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }), format.json()),
       }),
 
       new transports.File({
         filename: `logs/every.log`,
-        format: format.combine(format.timestamp(), format.json()),
+        format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }), format.json()),
       }),
 
       new transports.Console({
         format: format.combine(
           format.cli(),
           format.splat(),
-          format.timestamp(),
+          format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }),
           format.printf((info) => {
             return `${info.timestamp} ${info.level}: ${info.message}`;
           }),
