@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 
-export class CreateUserDto{
+export class CreateUserDto {
     @ApiProperty()
     @IsNumber()
     readonly universalAccountId: number;

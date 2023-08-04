@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsDate } from 'class-validator';
 
-export class CreateUserResponseDto{
+export class CreateUserResponseDto {
     @ApiProperty()
     @IsNumber()
     readonly id: number;
@@ -21,9 +21,8 @@ export class CreateUserResponseDto{
     @ApiProperty()
     @IsString()
     readonly profileURL: string;
-    
+
     constructor(partial: Partial<CreateUserResponseDto>) {
         Object.assign(this, partial);
     }
-    
 }

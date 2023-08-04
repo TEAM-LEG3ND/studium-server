@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class GetUserResponseDto{
+export class GetUserResponseDto {
     @ApiProperty()
     @IsNumber()
     readonly id: number;
