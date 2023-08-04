@@ -12,14 +12,9 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
     async findAll(): Promise<GetUserResponseDto[]> {
-        const users: User[] = await this.prisma.user.findMany();
-        const responseUsers = users.map((user) => {
-            const { id, manners, intro, profileURL }: GetUserResponseDto = user;
-            return { id, manners, intro, profileURL };
-        });
-
-      return responseUsers;
-  }
+        const users: User[] = await this.prisma.user.findMany();  
+        return users.map((user) => { return new GetUserResponseDto(user); });
+    }
 
     async findOne(userId: number): Promise<GetUserResponseDto>{
         if (isNaN(userId)) {
@@ -34,8 +29,7 @@ export class UserService {
             throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
         } 
 
-      const { id, manners, intro, profileURL }: GetUserResponseDto = user;
-      return { id, manners, intro, profileURL };
+      return new GetUserResponseDto(user);
     }
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
@@ -45,19 +39,17 @@ export class UserService {
           },
       });
 
-      const { id, createdAt, manners, intro, profileURL }: CreateUserResponseDto = user;
-      return { id, createdAt, manners, intro, profileURL };
+      return new CreateUserResponseDto(user);
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
-      const getUser: GetUserResponseDto = await this.findOne(userId);
-      const user: User = await this.prisma.user.update({
-          where: { id: getUser['id'] },
+      const user: GetUserResponseDto = await this.findOne(userId);
+      const updatedUser: User = await this.prisma.user.update({
+          where: { id: user['id'] },
           data: updateUserDto,
       });
 
-      const { id, updatedAt, manners, intro, profileURL }: UpdateUserResponseDto = user;
-      return { id, updatedAt, manners, intro, profileURL };
+      return new UpdateUserResponseDto(updatedUser);
   }
 
   async remove(id: number): Promise<void> {

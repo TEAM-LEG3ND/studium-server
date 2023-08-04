@@ -17,4 +17,8 @@ export class GetUserResponseDto{
     @ApiProperty()
     @IsString()
     readonly profileURL: string;
+
+    constructor(partial: Partial<GetUserResponseDto>) {
+        Object.assign(this, partial);
+    }
 }
