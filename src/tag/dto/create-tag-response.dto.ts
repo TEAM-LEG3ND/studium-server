@@ -6,4 +6,8 @@ export class CreateTagResponseDto {
 
   @ApiProperty()
   readonly name: string;
+
+  constructor(partial: Partial<CreateTagResponseDto>) {
+    Object.assign(this, partial);
+  }
 }
