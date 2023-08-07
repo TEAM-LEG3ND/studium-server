@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsNumber } from 'class-validator';
+import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 
 export class CreateStudyResponseDto {
   @ApiProperty()
@@ -49,6 +50,9 @@ export class CreateStudyResponseDto {
   @ApiProperty({ required: false })
   @IsString()
   readonly studyTemplate: string;
+
+  @ApiProperty({ type: [CreateTagDto], default: [] })
+  readonly tags: CreateTagDto[];
 
   constructor(partial: Partial<CreateStudyResponseDto>) {
     Object.assign(this, partial);

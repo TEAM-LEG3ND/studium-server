@@ -1,3 +1,4 @@
+import { CreateStudyResponseDto } from './create-study-response.dto';
 import { UpdateStudyDto } from './update-study.dto';
 
 export class UpdateStudyResponseDto extends UpdateStudyDto {
@@ -5,7 +6,7 @@ export class UpdateStudyResponseDto extends UpdateStudyDto {
   // For example, a message or status code, but they are optional.
 
   // constructor is optional if the superclass already has one that sets the properties
-  constructor(partial: Partial<UpdateStudyDto>) {
+  constructor(partial: Partial<CreateStudyResponseDto>) {
     super();
     Object.assign(this, partial);
   }

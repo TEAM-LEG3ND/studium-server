@@ -6,42 +6,74 @@ import { BadRequestException } from '@nestjs/common';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
-import { Study } from '@prisma/client';
 
 @Injectable()
 export class StudyService {
   constructor(private prisma: PrismaService) {}
 
   async create(createStudyDto: CreateStudyDto): Promise<CreateStudyResponseDto> {
-    const { ...data } = createStudyDto;
+    const { tags = [], ...data } = createStudyDto;
 
     const study = await this.prisma.study.create({
       data: {
         leader: {
           connect: { id: 3 }, // temporary user id
         },
+        tags: {
+          connectOrCreate: tags.map((tag) => ({
+            where: { name: tag },
+            create: { name: tag },
+          })),
+        },
         ...data,
+      },
+      include: {
+        tags: true,
       },
     });
     return new CreateStudyResponseDto(study);
   }
 
   async findAll(): Promise<GetStudyResponseDto[]> {
-    const studies = await this.prisma.study.findMany();
+    const studies = await this.prisma.study.findMany({
+      include: {
+        tags: true,
+      },
+    });
     return studies.map((study) => new GetStudyResponseDto(study));
   }
 
   async findOne(id: number): Promise<GetStudyResponseDto> {
-    const study = await this.prisma.study.findUnique({ where: { id } });
+    const study = await this.prisma.study.findUnique({
+      where: { id },
+      include: {
+        tags: true,
+      },
+    });
     return new GetStudyResponseDto(study);
   }
 
   async update(id: number, updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
-    const updatedStudy = await this.prisma.study.update({
+    const { tags, ...data } = updateStudyDto;
+
+    const study = await this.prisma.study.update({
       where: { id },
-      data: updateStudyDto,
+      data: {
+        tags: {
+          set: [],
+          connectOrCreate: tags.map((tagName) => ({
+            where: { name: tagName },
+            create: { name: tagName },
+          })),
+        },
+        ...data,
+      },
+      include: {
+        tags: true,
+      },
     });
-    return new UpdateStudyResponseDto(updatedStudy);
+
+    return new UpdateStudyResponseDto(study);
   }
 
   async remove(id: number) {
