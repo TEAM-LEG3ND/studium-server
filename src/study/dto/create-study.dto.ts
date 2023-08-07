@@ -1,87 +1,78 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsNumber, IsString, IsArray } from 'class-validator';
 
 export class CreateStudyDto {
   @IsOptional()
   @ApiProperty()
   @IsString()
-  readonly title : string;
+  readonly title: string;
 
   @IsOptional()
   @ApiProperty()
   @IsString()
-  readonly name : string;
+  readonly name: string;
 
   @IsOptional()
   @ApiProperty()
-  readonly recruitStartDate : Date;
+  readonly recruitStartDate: Date;
 
   @IsOptional()
   @ApiProperty()
-  readonly recruitEndDate : Date;
-
-  @IsOptional()
-  @ApiProperty()
-  @IsString()
-  readonly intro : string;
-
-  @IsOptional()
-  @ApiProperty()
-  readonly startDate : Date;
-
-  @IsOptional()
-  @ApiProperty()
-  readonly endDate : Date;
+  readonly recruitEndDate: Date;
 
   @IsOptional()
   @ApiProperty()
   @IsString()
-  readonly location : string;
+  readonly intro: string;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly startDate: Date;
+
+  @IsOptional()
+  @ApiProperty()
+  readonly endDate: Date;
+
+  @IsOptional()
+  @ApiProperty()
+  @IsString()
+  readonly location: string;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @IsNumber()
-  readonly recruiting : number;
+  readonly recruiting: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @IsNumber()
-  readonly recruited : number;
+  readonly recruited: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @IsString()
-  readonly studyTemplate : string;
+  readonly studyTemplate: string;
 
   @IsOptional()
   @ApiProperty()
   readonly questionnaire;
 
-
+  @IsOptional()
+  @ApiProperty({ type: [String], default: [] })
+  readonly tags: string[];
 
   /*
   
-
   @IsOptional()
   @ApiProperty({ type: [String] })
   rules: string[];
-
   
-
-  
-
-  
-
-  
-
   @IsOptional()
   @ApiProperty({ required: false, enum: ['RECRUITING', 'PROGRESS', 'EVALUATE', 'COMPLETE'] })
   role: studyStatus;
 
-  
 
   */
-
 }
 
 export enum studyStatus {
