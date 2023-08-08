@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
+import { User } from '@prisma/client';
 
 export class GetUserResponseDto {
     @ApiProperty()
@@ -18,7 +19,10 @@ export class GetUserResponseDto {
     @IsString()
     readonly profileURL: string;
 
-    constructor(partial: Partial<GetUserResponseDto>) {
-        Object.assign(this, partial);
+    constructor(user: User) {
+        this.id = user.id;
+        this.manners = user.manners;
+        this.intro = user.intro;
+        this.profileURL = user.profileURL;
     }
 }
