@@ -1,13 +1,16 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WinstonModule } from 'nest-winston';
 import { initSwaggerConfig } from './config/swagger-config';
 import { initWinstonConfigInstance } from './config/winston-logger-config';
+import { CommonExceptionFilter } from './common/common-exception-filter';
 
 async function bootstrap() {
+  const defaultLogger = WinstonModule.createLogger(initWinstonConfigInstance());
+
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger(initWinstonConfigInstance()),
+    logger: defaultLogger,
   });
 
   app.useGlobalPipes(
@@ -17,6 +20,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useGlobalFilters(new CommonExceptionFilter(app.get(HttpAdapterHost), defaultLogger));
 
   //api docs config
   initSwaggerConfig(app);
