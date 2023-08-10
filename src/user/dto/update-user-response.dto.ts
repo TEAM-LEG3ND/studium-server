@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import { IsNumber, IsString, IsDate } from 'class-validator';
-import { Study, ApplyForm, Member } from '@prisma/client';
+import { UpdateUserDto } from './update-user.dto';
 
-export class UpdateUserResponseDto{
+export class UpdateUserResponseDto {
     @ApiProperty()
     @IsNumber()
     readonly id: number;
@@ -11,20 +12,9 @@ export class UpdateUserResponseDto{
     @IsDate()
     readonly updatedAt: Date;
 
-    // todo db task
-    // @ApiProperty()
-    // readonly studyJoined: Study[];
-
     @ApiProperty()
     @IsNumber()
     readonly manners: number;
-
-    // @ApiProperty()
-    // readonly membersof: Member[];
-
-    // @ApiProperty()
-    // readonly applyForms: ApplyForm[];
-
     
     @ApiProperty()
     @IsString()
@@ -33,4 +23,12 @@ export class UpdateUserResponseDto{
     @ApiProperty()
     @IsString()
     readonly profileURL: string;
+
+    constructor(user: User) {
+        this.id = user.id;
+        this.updatedAt = user.updatedAt;
+        this.manners = user.manners;
+        this.intro = user.intro;
+        this.profileURL = user.profileURL;
+    }
 }

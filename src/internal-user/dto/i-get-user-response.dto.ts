@@ -15,8 +15,8 @@ export class InternalGetUserResponseDto{
     readonly updatedAt: Date;
     
     @ApiProperty()
-    @IsNumber()
-    readonly universalAccountId: number;
+    @IsString()
+    readonly universalAccountId: string;
 
     @ApiProperty()
     @IsNumber()
