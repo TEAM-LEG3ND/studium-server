@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { IsNumber, IsString, IsDate } from 'class-validator';
-import { UpdateUserDto } from './update-user.dto';
 
 export class UpdateUserResponseDto {
     @ApiProperty()
@@ -24,11 +23,15 @@ export class UpdateUserResponseDto {
     @IsString()
     readonly profileURL: string;
 
-    constructor(user: User) {
-        this.id = user.id;
-        this.updatedAt = user.updatedAt;
-        this.manners = user.manners;
-        this.intro = user.intro;
-        this.profileURL = user.profileURL;
+    constructor(id: number, updatedAt: Date, manners: number, intro: string, profileURL: string) {
+        this.id = id;
+        this.updatedAt = updatedAt;
+        this.manners = manners;
+        this.intro = intro;
+        this.profileURL = profileURL;
+    }
+
+    static fromUser(user: User) {
+        return new UpdateUserResponseDto(user.id, user.updatedAt, user.manners, user.intro, user.profileURL);
     }
 }

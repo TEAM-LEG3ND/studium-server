@@ -19,10 +19,14 @@ export class GetUserResponseDto {
     @IsString()
     readonly profileURL: string;
 
-    constructor(user: User) {
-        this.id = user.id;
-        this.manners = user.manners;
-        this.intro = user.intro;
-        this.profileURL = user.profileURL;
+    constructor(id: number, manners: number, intro: string, profileURL: string) {
+        this.id = id;
+        this.manners = manners;
+        this.intro = intro;
+        this.profileURL = profileURL;
+    }
+
+    static fromUser(user: User) {
+        return new GetUserResponseDto(user.id, user.manners, user.intro, user.profileURL);
     }
 }

@@ -23,11 +23,15 @@ export class CreateUserResponseDto {
     @IsString()
     readonly profileURL: string;
 
-    constructor(user: User) {
-        this.id = user.id;
-        this.createdAt = user.createdAt;
-        this.manners = user.manners;
-        this.intro = user.intro;
-        this.profileURL = user.profileURL;
+    constructor(id: number, createdAt: Date, manners: number, intro: string, profileURL: string) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.manners = manners;
+        this.intro = intro;
+        this.profileURL = profileURL;
+    }
+
+    static fromUser(user: User) {
+        return new CreateUserResponseDto(user.id, user.createdAt, user.manners, user.intro, user.profileURL);
     }
 }
