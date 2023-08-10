@@ -13,7 +13,7 @@ export class UserService {
 
     async findAll(): Promise<GetUserResponseDto[]> {
         const users: User[] = await this.prisma.user.findMany();  
-        return users.map((user) => { return new GetUserResponseDto(user); });
+        return users.map((user) => GetUserResponseDto.fromUser(user));
     }
 
     async findOne(userId: number): Promise<GetUserResponseDto>{
@@ -29,7 +29,7 @@ export class UserService {
             throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
         } 
 
-      return new GetUserResponseDto(user);
+      return GetUserResponseDto.fromUser(user);
     }
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
@@ -39,7 +39,7 @@ export class UserService {
           },
       });
 
-      return new CreateUserResponseDto(user);
+      return CreateUserResponseDto.fromUser(user);
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
@@ -49,7 +49,7 @@ export class UserService {
           data: updateUserDto,
       });
 
-      return new UpdateUserResponseDto(updatedUser);
+      return UpdateUserResponseDto.fromUser(updatedUser);
   }
 
   async remove(id: number): Promise<void> {
