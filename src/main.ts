@@ -13,6 +13,8 @@ async function bootstrap() {
     logger: defaultLogger,
   });
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, //ignore unknow properties
