@@ -9,12 +9,7 @@ export class InternalUserService {
 
     async findAll(): Promise<InternalGetUserResponseDto[]> {
         const users: User[] = await this.prisma.user.findMany();
-        const responseUsers = users.map((user) => {
-            const { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL }: InternalGetUserResponseDto = user;
-            return { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL };
-        });
-
-        return responseUsers;
+        return users.map((user) => InternalGetUserResponseDto.fromUser(user));
     }
 
     async findOne(userId: number): Promise<InternalGetUserResponseDto>{
@@ -30,7 +25,6 @@ export class InternalUserService {
             throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
         } 
 
-        const { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL }: InternalGetUserResponseDto = user;
-        return { id, createdAt, updatedAt, universalAccountId, manners, intro, profileURL };
+        return InternalGetUserResponseDto.fromUser(user);
     }
 }
