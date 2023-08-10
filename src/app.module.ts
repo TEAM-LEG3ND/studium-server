@@ -1,3 +1,4 @@
+import { WarmupModule } from './common/warmup/warmup.module';
 import { Module, Logger } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AppController } from './app.controller';
@@ -15,6 +16,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
     UserModule,
     StudyModule,
     TagModule,
+    WarmupModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
