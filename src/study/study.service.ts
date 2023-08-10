@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 import { PrismaService } from 'src/database/prisma.service';
-import { BadRequestException } from '@nestjs/common';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
@@ -31,7 +30,7 @@ export class StudyService {
         tags: true,
       },
     });
-    return new CreateStudyResponseDto(study);
+    return CreateStudyResponseDto.fromStudy(study);
   }
 
   async findAll(): Promise<GetStudyResponseDto[]> {
@@ -40,7 +39,7 @@ export class StudyService {
         tags: true,
       },
     });
-    return studies.map((study) => new GetStudyResponseDto(study));
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
 
   async findOne(id: number): Promise<GetStudyResponseDto> {
@@ -50,7 +49,7 @@ export class StudyService {
         tags: true,
       },
     });
-    return new GetStudyResponseDto(study);
+    return GetStudyResponseDto.fromStudy(study);
   }
 
   async update(id: number, updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
@@ -73,7 +72,7 @@ export class StudyService {
       },
     });
 
-    return new UpdateStudyResponseDto(study);
+    return UpdateStudyResponseDto.fromStudy(study);
   }
 
   async remove(id: number) {
