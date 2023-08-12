@@ -2,15 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Study } from '@prisma/client';
 import { IsString, IsDate, IsNumber } from 'class-validator';
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
+import { Location, getLocationEnumValue } from './enums';
 
 export class CreateStudyResponseDto {
   @ApiProperty()
   @IsString()
   readonly id: number;
-
-  @ApiProperty()
-  @IsString()
-  readonly title: string;
 
   @ApiProperty()
   @IsString()
@@ -38,11 +35,11 @@ export class CreateStudyResponseDto {
 
   @ApiProperty()
   @IsString()
-  readonly location: string;
+  readonly locationDetail: string;
 
   @ApiProperty({ required: false })
   @IsNumber()
-  readonly recruiting: number;
+  readonly total: number;
 
   @ApiProperty({ required: false })
   @IsNumber()
@@ -50,43 +47,60 @@ export class CreateStudyResponseDto {
 
   @ApiProperty({ required: false })
   @IsString()
-  readonly studyTemplate: string;
+  readonly templateContent: string;
 
   @ApiProperty({ type: [CreateTagDto], default: [] })
   readonly tags: CreateTagDto[];
 
-  constructor(id: number, title: string, name: string, recruitStartDate: Date, recruitEndDate: Date, intro: string, startDate: Date, endDate: Date,
-      location: string, recruiting: number, recruited: number, studyTemplate: string, tags: CreateTagDto[]) {
+  @ApiProperty()
+  readonly location: Location;
+
+  constructor(
+    id: number,
+    name: string,
+    recruitStartDate: Date,
+    recruitEndDate: Date,
+    intro: string,
+    startDate: Date,
+    endDate: Date,
+    locationDetail: string,
+    location: Location,
+    total: number,
+    recruited: number,
+    templateContent: string,
+    tags: CreateTagDto[],
+  ) {
     this.id = id;
-    this.title = title;
     this.name = name;
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
     this.intro = intro;
     this.startDate = startDate;
     this.endDate = endDate;
+    this.locationDetail = locationDetail;
     this.location = location;
-    this.recruiting = recruiting;
+    this.total = total;
     this.recruited = recruited;
-    this.studyTemplate = studyTemplate;
+    this.templateContent = templateContent;
     this.tags = tags;
   }
 
   static fromStudy(study: Study) {
+    const location: Location = getLocationEnumValue(study.location);
     return new CreateStudyResponseDto(
       study.id,
-      study.title,
       study.name,
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
       study.startDate,
       study.endDate,
-      study.location,
-      study.recruiting,
+      study.locationDetail,
+      location,
+      study.total,
       study.recruited,
-      study.studyTemplate,
-      study['tags']
+      study.templateContent,
+      study['tags'],
     );
   }
 }

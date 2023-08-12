@@ -14,7 +14,8 @@ model Study {
   updatedAt        DateTime    @updatedAt
   intro            String
   rules            String[]
-  location         String
+  location         Location
+  locationDetail   String
   status           StudyStatus @default(RECRUITING)
   endDate          DateTime
   recruitEndDate   DateTime
@@ -23,9 +24,8 @@ model Study {
   name             String
   questionnaire    Json
   recruited        Int
-  recruiting       Int
-  studyTemplate    String
-  title            String
+  total            Int
+  templateContent  String
   applyForms       ApplyForm[]
   member           Member[]
   leader           User        @relation(fields: [leaderId], references: [id])
@@ -88,4 +88,9 @@ enum MemberStatus {
 enum MemberType {
   LEADER
   MEMBER
+}
+
+enum Location {
+  ONLINE
+  OFFLINE
 }

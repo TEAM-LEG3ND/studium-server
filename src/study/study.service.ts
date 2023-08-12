@@ -16,7 +16,7 @@ export class StudyService {
     const study = await this.prisma.study.create({
       data: {
         leader: {
-          connect: { id: 3 }, // temporary user id
+          connect: { id: 1 }, // temporary user id
         },
         tags: {
           connectOrCreate: tags.map((tag) => ({
