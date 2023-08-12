@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ApplyForm } from '@prisma/client';
 import { IsString, IsNumber } from 'class-validator';
+import { GetAnswerResponseDto } from 'src/answer/dto/get-answer-response.dto';
 export class GetApplyFormResponseDto {
   @ApiProperty()
   @IsString()
@@ -20,12 +21,23 @@ export class GetApplyFormResponseDto {
   @IsNumber()
   readonly studyId: number;
 
-  constructor(id: number, createdAt: Date, updatedAt: Date, userId: number, studyId: number) {
+  @ApiProperty({ type: [GetAnswerResponseDto] })
+  readonly answers: GetAnswerResponseDto[];
+
+  constructor(
+    id: number,
+    createdAt: Date,
+    updatedAt: Date,
+    userId: number,
+    studyId: number,
+    answers: GetAnswerResponseDto[],
+  ) {
     this.id = id;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.userId = userId;
     this.studyId = studyId;
+    this.answers = answers;
   }
 
   static fromApplyForm(applyform: ApplyForm) {
@@ -35,6 +47,7 @@ export class GetApplyFormResponseDto {
       applyform.updatedAt,
       applyform.userId,
       applyform.studyId,
+      applyform['answers'],
     );
   }
 }

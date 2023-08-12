@@ -20,6 +20,7 @@ import { AnswerModule } from './answer/answer.module';
     TagModule,
     QuestionModule,
     ApplyFormModule,
+    AnswerModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -50,6 +51,10 @@ import { AnswerModule } from './answer/answer.module';
       {
         path: 'api/v1/applyform',
         module: ApplyFormModule,
+      },
+      {
+        path: 'api/v1/answer',
+        module: AnswerModule,
       },
     ]),
     AnswerModule,

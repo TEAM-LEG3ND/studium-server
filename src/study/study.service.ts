@@ -93,6 +93,15 @@ export class StudyService {
   }
 
   async remove(id: number) {
+    const studyToDelete = await this.prisma.study.findUnique({
+      where: { id },
+      include: { questions: true }, // Include associated questions
+    });
+    // Delete associated questions first
+    await Promise.all(
+      studyToDelete.questions.map((question) => this.prisma.question.delete({ where: { id: question.id } })),
+    );
+
     return await this.prisma.study.delete({ where: { id } });
   }
 
