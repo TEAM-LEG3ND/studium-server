@@ -78,4 +78,20 @@ export class StudyService {
   async remove(id: number) {
     return await this.prisma.study.delete({ where: { id } });
   }
+
+  async getStudiesByTag(tagName: string) {
+    const studies = await this.prisma.study.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tagName,
+          },
+        },
+      },
+      include: {
+        tags: true,
+      },
+    });
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
+  }
 }

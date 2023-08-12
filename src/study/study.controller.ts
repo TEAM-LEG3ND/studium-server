@@ -34,4 +34,9 @@ export class StudyController {
   remove(@Param('id') id: string) {
     return this.studyService.remove(+id);
   }
+
+  @Get('tag/:tagName')
+  getStudiesByTag(@Param('tagName') tagName: string): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesByTag(tagName);
+  }
 }
