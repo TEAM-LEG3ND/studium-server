@@ -10,6 +10,12 @@ export class CreateStudyResponseDto {
   readonly id: number;
 
   @ApiProperty()
+  readonly createdAt: Date;
+
+  @ApiProperty()
+  readonly updatedAt: Date;
+
+  @ApiProperty()
   @IsString()
   readonly name: string;
 
@@ -57,6 +63,8 @@ export class CreateStudyResponseDto {
 
   constructor(
     id: number,
+    createdAt: Date,
+    updatedAt: Date,
     name: string,
     recruitStartDate: Date,
     recruitEndDate: Date,
@@ -71,6 +79,8 @@ export class CreateStudyResponseDto {
     tags: CreateTagDto[],
   ) {
     this.id = id;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
     this.name = name;
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
@@ -89,6 +99,8 @@ export class CreateStudyResponseDto {
     const location: Location = getLocationEnumValue(study.location);
     return new CreateStudyResponseDto(
       study.id,
+      study.createdAt,
+      study.updatedAt,
       study.name,
       study.recruitStartDate,
       study.recruitEndDate,

@@ -10,6 +10,12 @@ export class GetStudyResponseDto {
   readonly id: number;
 
   @ApiProperty()
+  readonly createdAt: Date;
+
+  @ApiProperty()
+  readonly updatedAt: Date;
+
+  @ApiProperty()
   @IsString()
   readonly name: string;
 
@@ -52,15 +58,14 @@ export class GetStudyResponseDto {
   @ApiProperty({ type: [GetTagResponseDto] })
   readonly tags: GetTagResponseDto[];
 
-  @ApiProperty({
-    enum: Location,
-    description: 'Location of the study (ONLINE or OFFLINE)',
-  })
+  @ApiProperty({ enum: Location })
   @IsEnum(Location)
   readonly location: Location;
 
   constructor(
     id: number,
+    createdAt: Date,
+    updatedAt: Date,
     name: string,
     recruitStartDate: Date,
     recruitEndDate: Date,
@@ -75,6 +80,8 @@ export class GetStudyResponseDto {
     tags: GetTagResponseDto[],
   ) {
     this.id = id;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
     this.name = name;
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
@@ -93,6 +100,8 @@ export class GetStudyResponseDto {
     const location: Location = getLocationEnumValue(study.location);
     return new GetStudyResponseDto(
       study.id,
+      study.createdAt,
+      study.updatedAt,
       study.name,
       study.recruitStartDate,
       study.recruitEndDate,

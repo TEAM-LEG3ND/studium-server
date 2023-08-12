@@ -10,6 +10,8 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   // constructor is optional if the superclass already has one that sets the properties
   constructor(
     id: number,
+    createdAt: Date,
+    updatedAt: Date,
     name: string,
     recruitStartDate: Date,
     recruitEndDate: Date,
@@ -25,6 +27,8 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   ) {
     super(
       id,
+      createdAt,
+      updatedAt,
       name,
       recruitStartDate,
       recruitEndDate,
@@ -44,6 +48,8 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
     const location: Location = getLocationEnumValue(study.location);
     return new UpdateStudyResponseDto(
       study.id,
+      study.createdAt,
+      study.updatedAt,
       study.name,
       study.recruitStartDate,
       study.recruitEndDate,
