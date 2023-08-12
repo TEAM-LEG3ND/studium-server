@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { TagModule } from './tag/tag.module';
 import { InfraModule } from './infra/infra.module';
 import { InternalUserModule } from './internal-user/internal-user.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
     UserModule,
     StudyModule,
     TagModule,
+    QuestionModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -37,6 +39,10 @@ import { InternalUserModule } from './internal-user/internal-user.module';
       {
         path: 'api/v1/tag',
         module: TagModule,
+      },
+      {
+        path: 'api/v1/question',
+        module: QuestionModule,
       },
     ]),
   ],

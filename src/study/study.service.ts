@@ -11,7 +11,7 @@ export class StudyService {
   constructor(private prisma: PrismaService) {}
 
   async create(createStudyDto: CreateStudyDto): Promise<CreateStudyResponseDto> {
-    const { tags = [], ...data } = createStudyDto;
+    const { tags = [], questions = [], ...data } = createStudyDto;
 
     const study = await this.prisma.study.create({
       data: {
@@ -24,10 +24,16 @@ export class StudyService {
             create: { name: tag },
           })),
         },
+        questions: {
+          create: questions.map((questionText) => ({
+            text: questionText,
+          })),
+        },
         ...data,
       },
       include: {
         tags: true,
+        questions: true,
       },
     });
     return CreateStudyResponseDto.fromStudy(study);
@@ -37,6 +43,7 @@ export class StudyService {
     const studies = await this.prisma.study.findMany({
       include: {
         tags: true,
+        questions: true,
       },
     });
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
@@ -47,13 +54,14 @@ export class StudyService {
       where: { id },
       include: {
         tags: true,
+        questions: true,
       },
     });
     return GetStudyResponseDto.fromStudy(study);
   }
 
   async update(id: number, updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
-    const { tags, ...data } = updateStudyDto;
+    const { tags, questions, ...data } = updateStudyDto;
 
     const study = await this.prisma.study.update({
       where: { id },
@@ -65,10 +73,19 @@ export class StudyService {
             create: { name: tagName },
           })),
         },
+        questions: {
+          // Delete existing questions and recreate the updated ones
+          deleteMany: {},
+          create: questions.map((questionText) => ({
+            text: questionText,
+          })),
+        },
         ...data,
       },
+
       include: {
         tags: true,
+        questions: true,
       },
     });
 
@@ -90,6 +107,7 @@ export class StudyService {
       },
       include: {
         tags: true,
+        questions: true,
       },
     });
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
