@@ -16,7 +16,7 @@ export class StudyService {
     const study = await this.prisma.study.create({
       data: {
         leader: {
-          connect: { id: 3 }, // temporary user id
+          connect: { id: 1 }, // temporary user id
         },
         tags: {
           connectOrCreate: tags.map((tag) => ({
@@ -77,5 +77,21 @@ export class StudyService {
 
   async remove(id: number) {
     return await this.prisma.study.delete({ where: { id } });
+  }
+
+  async getStudiesByTag(tagName: string) {
+    const studies = await this.prisma.study.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tagName,
+          },
+        },
+      },
+      include: {
+        tags: true,
+      },
+    });
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
 }

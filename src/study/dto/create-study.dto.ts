@@ -1,12 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsNumber, IsString, IsEnum } from 'class-validator';
+import { Location } from './enums';
 
 export class CreateStudyDto {
-  @IsOptional()
-  @ApiProperty()
-  @IsString()
-  readonly title: string;
-
   @IsOptional()
   @ApiProperty()
   @IsString()
@@ -36,12 +32,12 @@ export class CreateStudyDto {
   @IsOptional()
   @ApiProperty()
   @IsString()
-  readonly location: string;
+  readonly locationDetail: string;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @IsNumber()
-  readonly recruiting: number;
+  readonly total: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
@@ -51,7 +47,7 @@ export class CreateStudyDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @IsString()
-  readonly studyTemplate: string;
+  readonly templateContent: string;
 
   @IsOptional()
   @ApiProperty()
@@ -60,6 +56,13 @@ export class CreateStudyDto {
   @IsOptional()
   @ApiProperty({ type: [String], default: [] })
   readonly tags: string[];
+
+  @ApiProperty({
+    enum: Location,
+    description: 'Location of the study (ONLINE or OFFLINE)',
+  })
+  @IsEnum(Location)
+  location: Location;
 
   /*
   
@@ -73,11 +76,4 @@ export class CreateStudyDto {
 
 
   */
-}
-
-export enum studyStatus {
-  recruiting = 'INACTIVE',
-  progress = 'PROGRESS',
-  evaluate = 'EVALUATE',
-  complete = 'COMPLETE',
 }

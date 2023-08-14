@@ -1,32 +1,67 @@
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 import { CreateStudyResponseDto } from './create-study-response.dto';
 import { Study } from '@prisma/client';
+import { Location, getLocationEnumValue } from './enums';
 
 export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   // You can add additional properties specific to the response, if needed.
   // For example, a message or status code, but they are optional.
 
   // constructor is optional if the superclass already has one that sets the properties
-  constructor(id: number, title: string, name: string, recruitStartDate: Date, recruitEndDate: Date, intro: string, startDate: Date, endDate: Date,
-    location: string, recruiting: number, recruited: number, studyTemplate: string, tags: CreateTagDto[]) {
-    super(id, title, name, recruitStartDate, recruitEndDate, intro, startDate, endDate, location, recruiting, recruited, studyTemplate, tags);
+  constructor(
+    id: number,
+    createdAt: Date,
+    updatedAt: Date,
+    name: string,
+    recruitStartDate: Date,
+    recruitEndDate: Date,
+    intro: string,
+    startDate: Date,
+    endDate: Date,
+    locationDetail: string,
+    location: Location,
+    total: number,
+    recruited: number,
+    templateContent: string,
+    tags: CreateTagDto[],
+  ) {
+    super(
+      id,
+      createdAt,
+      updatedAt,
+      name,
+      recruitStartDate,
+      recruitEndDate,
+      intro,
+      startDate,
+      endDate,
+      locationDetail,
+      location,
+      total,
+      recruited,
+      templateContent,
+      tags,
+    );
   }
 
   static fromStudy(study: Study) {
+    const location: Location = getLocationEnumValue(study.location);
     return new UpdateStudyResponseDto(
       study.id,
-      study.title,
+      study.createdAt,
+      study.updatedAt,
       study.name,
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
       study.startDate,
       study.endDate,
-      study.location,
-      study.recruiting,
+      study.locationDetail,
+      location,
+      study.total,
       study.recruited,
-      study.studyTemplate,
-      study['tags']
+      study.templateContent,
+      study['tags'],
     );
   }
 }
