@@ -66,6 +66,7 @@ export class GetStudyResponseDto {
   @ApiProperty({ type: [GetQuestionResponseDto] })
   readonly questions: GetQuestionResponseDto[];
 
+
   constructor(
     id: number,
     createdAt: Date,

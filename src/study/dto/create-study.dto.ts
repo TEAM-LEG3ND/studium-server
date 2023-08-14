@@ -64,6 +64,7 @@ export class CreateStudyDto {
   @ApiProperty({ type: [String], default: [] })
   readonly questions: string[];
 
+
   /*
   
   @IsOptional()
