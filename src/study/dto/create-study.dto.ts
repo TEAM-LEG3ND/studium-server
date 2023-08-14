@@ -50,10 +50,6 @@ export class CreateStudyDto {
   readonly templateContent: string;
 
   @IsOptional()
-  @ApiProperty()
-  readonly questionnaire;
-
-  @IsOptional()
   @ApiProperty({ type: [String], default: [] })
   readonly tags: string[];
 
@@ -63,6 +59,11 @@ export class CreateStudyDto {
   })
   @IsEnum(Location)
   location: Location;
+
+  @IsOptional()
+  @ApiProperty({ type: [String], default: [] })
+  readonly questions: string[];
+
 
   /*
   

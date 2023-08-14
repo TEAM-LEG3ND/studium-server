@@ -2,44 +2,89 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateApplyFormDto } from './dto/create-apply-form.dto';
 import { ApplyForm } from '@prisma/client';
+import { CreateApplyFormResponseDto } from './dto/create-apply-form-response.dto';
+import { GetApplyFormResponseDto } from './dto/get-apply-form-response.dto';
+import { UpdateApplyFormDto } from './dto/update-apply-form.dto';
+import { UpdateApplyFormResponseDto } from './dto/update-apply-form-response.dto';
 
 @Injectable()
 export class ApplyFormService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<Array<ApplyForm>> {
-    return await this.prisma.applyForm.findMany();
+  async create(createApplyFormDto: CreateApplyFormDto): Promise<CreateApplyFormResponseDto> {
+    const { userId, studyId, answers, ...data } = createApplyFormDto;
+    const applyForm: ApplyForm = await this.prisma.applyForm.create({
+      data: {
+        user: { connect: { id: userId } },
+        study: { connect: { id: studyId } },
+        answers: {
+          create: answers.map((answer) => ({
+            text: answer.text,
+            question: { connect: { id: answer.questionId } },
+          })),
+        },
+        ...data,
+      },
+      include: {
+        answers: true,
+        user: true,
+        study: true,
+      },
+    });
+    return CreateApplyFormResponseDto.fromApplyForm(applyForm);
   }
 
-  async findById(id: number): Promise<ApplyForm> {
-    const applyForm = await this.prisma.applyForm.findUnique({
+  async findAll(): Promise<GetApplyFormResponseDto[]> {
+    const applyForms = await this.prisma.applyForm.findMany({
+      include: {
+        answers: true,
+      },
+    });
+    return applyForms.map((applyForm) => GetApplyFormResponseDto.fromApplyForm(applyForm));
+  }
+
+  async findOne(id: number): Promise<GetApplyFormResponseDto> {
+    const study = await this.prisma.applyForm.findUnique({
       where: { id },
-      include: { user: true, study: true },
+      include: {
+        answers: true,
+      },
     });
-    return applyForm;
+    return GetApplyFormResponseDto.fromApplyForm(study);
   }
 
-  async create(CreateApplyFormDto: CreateApplyFormDto): Promise<ApplyForm> {
-    const applyForm = await this.prisma.applyForm.create({
-      data: { ...CreateApplyFormDto },
-      include: { user: true, study: true },
-    });
-    return applyForm;
-  }
+  async update(id: number, updateApplyFormDto: UpdateApplyFormDto): Promise<UpdateApplyFormResponseDto> {
+    const { userId, studyId, answers, ...data } = updateApplyFormDto;
 
-  async update(id: number, data: CreateApplyFormDto): Promise<ApplyForm> {
     const applyForm = await this.prisma.applyForm.update({
       where: { id },
-      data,
-      //   include: { user: true, study: true },
+      data: {
+        answers: {
+          deleteMany: {},
+          create: answers.map((answer) => ({
+            text: answer.text,
+            question: { connect: { id: answer.questionId } },
+          })),
+        },
+        ...data,
+      },
+      include: {
+        answers: true,
+      },
     });
-    return applyForm;
-  }
 
-  async deleteById(id: number): Promise<void> {
-    const applyForm = await this.findById(id);
-    if (applyForm) {
-      await this.prisma.applyForm.delete({ where: { id } });
-    }
+    return UpdateApplyFormResponseDto.fromApplyForm(applyForm);
+  }
+  async remove(id: number) {
+    const applyFormToDelete = await this.prisma.applyForm.findUnique({
+      where: { id },
+      include: { answers: true }, // Include associated answers
+    });
+    // Delete associated answers first
+    await Promise.all(
+      applyFormToDelete.answers.map((answer) => this.prisma.answer.delete({ where: { id: answer.id } })),
+    );
+
+    return await this.prisma.applyForm.delete({ where: { id } });
   }
 }

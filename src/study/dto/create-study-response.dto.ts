@@ -3,6 +3,7 @@ import { Study } from '@prisma/client';
 import { IsString, IsDate, IsNumber } from 'class-validator';
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 import { Location, getLocationEnumValue } from './enums';
+import { CreateQuestionDto } from 'src/question/dto/create-question.dto';
 
 export class CreateStudyResponseDto {
   @ApiProperty()
@@ -61,6 +62,10 @@ export class CreateStudyResponseDto {
   @ApiProperty()
   readonly location: Location;
 
+
+  @ApiProperty({ type: [CreateQuestionDto], default: [] })
+  readonly questions: CreateQuestionDto[];
+
   constructor(
     id: number,
     createdAt: Date,
@@ -77,6 +82,7 @@ export class CreateStudyResponseDto {
     recruited: number,
     templateContent: string,
     tags: CreateTagDto[],
+    questions: CreateQuestionDto[],
   ) {
     this.id = id;
     this.createdAt = createdAt;
@@ -93,6 +99,7 @@ export class CreateStudyResponseDto {
     this.recruited = recruited;
     this.templateContent = templateContent;
     this.tags = tags;
+    this.questions = questions;
   }
 
   static fromStudy(study: Study) {
@@ -113,6 +120,7 @@ export class CreateStudyResponseDto {
       study.recruited,
       study.templateContent,
       study['tags'],
+      study['questions'],
     );
   }
 }
