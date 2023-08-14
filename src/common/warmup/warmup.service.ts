@@ -16,7 +16,7 @@ export class WarmupService implements OnApplicationBootstrap {
     const requestBody = {
       base_path: basePath,
       draft_endpoints: draftEndpoints,
-      serviceType: 'STUDIUM',
+      type: 'STUDIUM',
       public_endpoints: publicEndpoints,
     };
 
