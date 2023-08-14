@@ -22,6 +22,7 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new CommonExceptionFilter(app.get(HttpAdapterHost), defaultLogger));
+  app.enableShutdownHooks();
 
   //api docs config
   initSwaggerConfig(app);
