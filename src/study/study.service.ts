@@ -141,7 +141,7 @@ export class StudyService {
       orderBy: {
         viewCount: 'desc',
       },
-      take: 10,
+      take: 12,
     });
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
