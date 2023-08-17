@@ -19,6 +19,11 @@ export class StudyController {
   findAll(): Promise<GetStudyResponseDto[]> {
     return this.studyService.findAll();
   }
+  
+  @Get('onfire/')
+  getStudiesOnFire(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesOnFire();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
