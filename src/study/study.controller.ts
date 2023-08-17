@@ -20,7 +20,7 @@ export class StudyController {
     return this.studyService.findAll();
   }
 
-  @Get('onfire')
+  @Get('on-fire')
   getStudiesOnFire(): Promise<GetStudyResponseDto[]> {
     return this.studyService.getStudiesOnFire();
   }
