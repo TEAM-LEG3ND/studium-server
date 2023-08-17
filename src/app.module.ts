@@ -8,6 +8,9 @@ import { UserModule } from './user/user.module';
 import { TagModule } from './tag/tag.module';
 import { InfraModule } from './infra/infra.module';
 import { InternalUserModule } from './internal-user/internal-user.module';
+import { QuestionModule } from './question/question.module';
+import { ApplyFormModule } from './apply-form/apply-form.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { InternalUserModule } from './internal-user/internal-user.module';
     StudyModule,
     TagModule,
     WarmupModule,
+    QuestionModule,
+    ApplyFormModule,
+    AnswerModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -40,7 +46,20 @@ import { InternalUserModule } from './internal-user/internal-user.module';
         path: 'api/v1/tag',
         module: TagModule,
       },
+      {
+        path: 'api/v1/question',
+        module: QuestionModule,
+      },
+      {
+        path: 'api/v1/applyform',
+        module: ApplyFormModule,
+      },
+      {
+        path: 'api/v1/answer',
+        module: AnswerModule,
+      },
     ]),
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

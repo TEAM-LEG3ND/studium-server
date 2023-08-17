@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Study } from '@prisma/client';
 import { IsString, IsDate, IsNumber } from 'class-validator';
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
+import { Location, getLocationEnumValue } from './enums';
+import { CreateQuestionDto } from 'src/question/dto/create-question.dto';
 
 export class CreateStudyResponseDto {
   @ApiProperty()
@@ -8,8 +11,10 @@ export class CreateStudyResponseDto {
   readonly id: number;
 
   @ApiProperty()
-  @IsString()
-  readonly title: string;
+  readonly createdAt: Date;
+
+  @ApiProperty()
+  readonly updatedAt: Date;
 
   @ApiProperty()
   @IsString()
@@ -37,11 +42,11 @@ export class CreateStudyResponseDto {
 
   @ApiProperty()
   @IsString()
-  readonly location: string;
+  readonly locationDetail: string;
 
   @ApiProperty({ required: false })
   @IsNumber()
-  readonly recruiting: number;
+  readonly total: number;
 
   @ApiProperty({ required: false })
   @IsNumber()
@@ -49,12 +54,73 @@ export class CreateStudyResponseDto {
 
   @ApiProperty({ required: false })
   @IsString()
-  readonly studyTemplate: string;
+  readonly templateContent: string;
 
   @ApiProperty({ type: [CreateTagDto], default: [] })
   readonly tags: CreateTagDto[];
 
-  constructor(partial: Partial<CreateStudyResponseDto>) {
-    Object.assign(this, partial);
+  @ApiProperty()
+  readonly location: Location;
+
+
+  @ApiProperty({ type: [CreateQuestionDto], default: [] })
+  readonly questions: CreateQuestionDto[];
+
+  constructor(
+    id: number,
+    createdAt: Date,
+    updatedAt: Date,
+    name: string,
+    recruitStartDate: Date,
+    recruitEndDate: Date,
+    intro: string,
+    startDate: Date,
+    endDate: Date,
+    locationDetail: string,
+    location: Location,
+    total: number,
+    recruited: number,
+    templateContent: string,
+    tags: CreateTagDto[],
+    questions: CreateQuestionDto[],
+  ) {
+    this.id = id;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.name = name;
+    this.recruitStartDate = recruitStartDate;
+    this.recruitEndDate = recruitEndDate;
+    this.intro = intro;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.locationDetail = locationDetail;
+    this.location = location;
+    this.total = total;
+    this.recruited = recruited;
+    this.templateContent = templateContent;
+    this.tags = tags;
+    this.questions = questions;
+  }
+
+  static fromStudy(study: Study) {
+    const location: Location = getLocationEnumValue(study.location);
+    return new CreateStudyResponseDto(
+      study.id,
+      study.createdAt,
+      study.updatedAt,
+      study.name,
+      study.recruitStartDate,
+      study.recruitEndDate,
+      study.intro,
+      study.startDate,
+      study.endDate,
+      study.locationDetail,
+      location,
+      study.total,
+      study.recruited,
+      study.templateContent,
+      study['tags'],
+      study['questions'],
+    );
   }
 }

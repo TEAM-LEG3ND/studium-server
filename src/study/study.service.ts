@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 import { PrismaService } from 'src/database/prisma.service';
-import { BadRequestException } from '@nestjs/common';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
@@ -12,12 +11,12 @@ export class StudyService {
   constructor(private prisma: PrismaService) {}
 
   async create(createStudyDto: CreateStudyDto): Promise<CreateStudyResponseDto> {
-    const { tags = [], ...data } = createStudyDto;
+    const { tags = [], questions = [], ...data } = createStudyDto;
 
     const study = await this.prisma.study.create({
       data: {
         leader: {
-          connect: { id: 3 }, // temporary user id
+          connect: { id: 1 }, // temporary user id
         },
         tags: {
           connectOrCreate: tags.map((tag) => ({
@@ -25,22 +24,29 @@ export class StudyService {
             create: { name: tag },
           })),
         },
+        questions: {
+          create: questions.map((questionText) => ({
+            text: questionText,
+          })),
+        },
         ...data,
       },
       include: {
         tags: true,
+        questions: true,
       },
     });
-    return new CreateStudyResponseDto(study);
+    return CreateStudyResponseDto.fromStudy(study);
   }
 
   async findAll(): Promise<GetStudyResponseDto[]> {
     const studies = await this.prisma.study.findMany({
       include: {
         tags: true,
+        questions: true,
       },
     });
-    return studies.map((study) => new GetStudyResponseDto(study));
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
 
   async findOne(id: number): Promise<GetStudyResponseDto> {
@@ -48,13 +54,14 @@ export class StudyService {
       where: { id },
       include: {
         tags: true,
+        questions: true,
       },
     });
-    return new GetStudyResponseDto(study);
+    return GetStudyResponseDto.fromStudy(study);
   }
 
   async update(id: number, updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
-    const { tags, ...data } = updateStudyDto;
+    const { tags, questions, ...data } = updateStudyDto;
 
     const study = await this.prisma.study.update({
       where: { id },
@@ -66,17 +73,52 @@ export class StudyService {
             create: { name: tagName },
           })),
         },
+        questions: {
+          // Delete existing questions and recreate the updated ones
+          deleteMany: {},
+          create: questions.map((questionText) => ({
+            text: questionText,
+          })),
+        },
         ...data,
       },
+
       include: {
         tags: true,
+        questions: true,
       },
     });
 
-    return new UpdateStudyResponseDto(study);
+    return UpdateStudyResponseDto.fromStudy(study);
   }
 
   async remove(id: number) {
+    const studyToDelete = await this.prisma.study.findUnique({
+      where: { id },
+      include: { questions: true }, // Include associated questions
+    });
+    // Delete associated questions first
+    await Promise.all(
+      studyToDelete.questions.map((question) => this.prisma.question.delete({ where: { id: question.id } })),
+    );
+
     return await this.prisma.study.delete({ where: { id } });
+  }
+
+  async getStudiesByTag(tagName: string) {
+    const studies = await this.prisma.study.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tagName,
+          },
+        },
+      },
+      include: {
+        tags: true,
+        questions: true,
+      },
+    });
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
 }

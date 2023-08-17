@@ -14,22 +14,22 @@ model Study {
   updatedAt        DateTime    @updatedAt
   intro            String
   rules            String[]
-  location         String
+  location         Location
+  locationDetail   String
   status           StudyStatus @default(RECRUITING)
   endDate          DateTime
   recruitEndDate   DateTime
   recruitStartDate DateTime
   startDate        DateTime
   name             String
-  questionnaire    Json
   recruited        Int
-  recruiting       Int
-  studyTemplate    String
-  title            String
-  applyForms       ApplyForm[]
+  total            Int
+  templateContent  String
   member           Member[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")
+  questions        Question[]
+  applyForms       ApplyForm[]
 }
 
 model User {
@@ -62,14 +62,40 @@ model Tag {
 }
 
 model ApplyForm {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  answer    Json
-  studyId   Int
-  study     Study    @relation(fields: [studyId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  study      Study       @relation(fields: [studyId], references: [id])
+  studyId    Int
+  user       User        @relation(fields: [userId], references: [id])
+  answers    Answer[]
+  timeFrames TimeFrame[]
+}
+
+model Question {
+  id      Int      @id @default(autoincrement())
+  text    String
+  study   Study    @relation(fields: [studyId], references: [id])
+  studyId Int
+  Answer  Answer[]
+}
+
+model Answer {
+  id          Int       @id @default(autoincrement())
+  text        String
+  question    Question  @relation(fields: [questionId], references: [id])
+  questionId  Int
+  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
+  applyFormId Int
+}
+
+model TimeFrame {
+  id          Int       @id @default(autoincrement())
+  start       DateTime
+  end         DateTime
+  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
+  applyFormId Int
 }
 
 enum StudyStatus {
@@ -88,4 +114,9 @@ enum MemberStatus {
 enum MemberType {
   LEADER
   MEMBER
+}
+
+enum Location {
+  ONLINE
+  OFFLINE
 }
