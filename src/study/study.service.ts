@@ -145,4 +145,16 @@ export class StudyService {
     });
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
+
+  async incrementViewCount(id: number): Promise<UpdateStudyResponseDto> {    
+    const study = await this.prisma.study.update({
+      where : { id },
+      data : {
+        viewCount : {
+          increment: 1
+        }
+      },
+    });
+    return UpdateStudyResponseDto.fromStudy(study);
+  }
 }

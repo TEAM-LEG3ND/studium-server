@@ -35,6 +35,11 @@ export class StudyController {
     return this.studyService.update(+id, updateStudyDto);
   }
 
+  @Patch(':id/increment-views')
+  incrementViewCount(@Param('id') id:string): Promise<UpdateStudyResponseDto> {
+    return this.studyService.incrementViewCount(+id);
+  } 
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studyService.remove(+id);
