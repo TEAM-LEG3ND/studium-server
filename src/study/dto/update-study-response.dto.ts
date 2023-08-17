@@ -2,7 +2,6 @@ import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 import { CreateStudyResponseDto } from './create-study-response.dto';
 import { Study } from '@prisma/client';
 import { Location, getLocationEnumValue } from './enums';
-import { CreateQuestionDto } from 'src/question/dto/create-question.dto';
 import { GetQuestionResponseDto } from 'src/question/dto/get-question-response.dto';
 
 export class UpdateStudyResponseDto extends CreateStudyResponseDto {
@@ -25,6 +24,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
     total: number,
     recruited: number,
     templateContent: string,
+    viewCount: number,
     tags: CreateTagDto[],
     questions: GetQuestionResponseDto[],
   ) {
@@ -43,6 +43,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       total,
       recruited,
       templateContent,
+      viewCount,
       tags,
       questions,
     );
@@ -65,6 +66,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       study.total,
       study.recruited,
       study.templateContent,
+      study.viewCount,
       study['tags'],
       study['questions'],
     );

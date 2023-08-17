@@ -25,6 +25,7 @@ model Study {
   recruited        Int
   total            Int
   templateContent  String
+  viewCount        Int         @default(0)
   member           Member[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")

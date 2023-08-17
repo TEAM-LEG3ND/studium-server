@@ -56,6 +56,10 @@ export class CreateStudyResponseDto {
   @IsString()
   readonly templateContent: string;
 
+  @ApiProperty({ required: false })
+  @IsNumber()
+  readonly viewCount: number;
+
   @ApiProperty({ type: [CreateTagDto], default: [] })
   readonly tags: CreateTagDto[];
 
@@ -81,6 +85,7 @@ export class CreateStudyResponseDto {
     total: number,
     recruited: number,
     templateContent: string,
+    viewCount: number,
     tags: CreateTagDto[],
     questions: CreateQuestionDto[],
   ) {
@@ -98,6 +103,7 @@ export class CreateStudyResponseDto {
     this.total = total;
     this.recruited = recruited;
     this.templateContent = templateContent;
+    this.viewCount = viewCount;
     this.tags = tags;
     this.questions = questions;
   }
@@ -119,6 +125,7 @@ export class CreateStudyResponseDto {
       study.total,
       study.recruited,
       study.templateContent,
+      study.viewCount,
       study['tags'],
       study['questions'],
     );
