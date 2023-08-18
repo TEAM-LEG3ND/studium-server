@@ -20,6 +20,11 @@ export class StudyController {
     return this.studyService.findAll();
   }
 
+  @Get('on-fire')
+  getStudiesOnFire(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesOnFire();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
     return this.studyService.findOne(+id);
@@ -29,6 +34,11 @@ export class StudyController {
   update(@Param('id') id: string, @Body() updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
     return this.studyService.update(+id, updateStudyDto);
   }
+
+  @Patch(':id/increment-views')
+  incrementViewCount(@Param('id') id:string): Promise<UpdateStudyResponseDto> {
+    return this.studyService.incrementViewCount(+id);
+  } 
 
   @Delete(':id')
   remove(@Param('id') id: string) {
