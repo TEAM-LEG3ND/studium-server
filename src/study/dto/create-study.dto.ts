@@ -50,11 +50,6 @@ export class CreateStudyDto {
   readonly templateContent: string;
 
   @IsOptional()
-  @ApiProperty({ required: false })
-  @IsNumber()
-  readonly viewCount: number;
-
-  @IsOptional()
   @ApiProperty({ type: [String], default: [] })
   readonly tags: string[];
 
