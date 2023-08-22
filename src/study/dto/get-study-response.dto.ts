@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Study } from '@prisma/client';
-import { IsString, IsDate, IsNumber, IsEnum } from 'class-validator';
+import { IsString, IsDate, IsNumber, IsEnum, IsArray } from 'class-validator';
 import { GetTagResponseDto } from 'src/tag/dto/get-tag-response.dto';
 import { Location, getLocationEnumValue } from './enums';
 import { GetQuestionResponseDto } from 'src/question/dto/get-question-response.dto';
@@ -31,6 +31,10 @@ export class GetStudyResponseDto {
   @ApiProperty()
   @IsString()
   readonly intro: string;
+
+  @ApiProperty()
+  @IsArray()
+  readonly rules: string[];
 
   @ApiProperty()
   @IsDate()
@@ -79,6 +83,7 @@ export class GetStudyResponseDto {
     recruitStartDate: Date,
     recruitEndDate: Date,
     intro: string,
+    rules: string[],
     startDate: Date,
     endDate: Date,
     locationDetail: string,
@@ -97,6 +102,7 @@ export class GetStudyResponseDto {
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
     this.intro = intro;
+    this.rules = rules;
     this.startDate = startDate;
     this.endDate = endDate;
     this.locationDetail = locationDetail;
@@ -119,6 +125,7 @@ export class GetStudyResponseDto {
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
+      study.rules,
       study.startDate,
       study.endDate,
       study.locationDetail,

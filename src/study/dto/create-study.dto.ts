@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsString, IsEnum } from 'class-validator';
+import { IsOptional, IsNumber, IsString, IsEnum, IsArray } from 'class-validator';
 import { Location } from './enums';
 
 export class CreateStudyDto {
@@ -20,6 +20,11 @@ export class CreateStudyDto {
   @ApiProperty()
   @IsString()
   readonly intro: string;
+
+  @IsOptional()
+  @ApiProperty()
+  @IsArray()
+  readonly rules: string[];
 
   @IsOptional()
   @ApiProperty()
