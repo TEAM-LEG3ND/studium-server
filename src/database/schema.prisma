@@ -31,12 +31,14 @@ model Study {
   tags             Tag[]       @relation("StudyToTag")
   questions        Question[]
   applyForms       ApplyForm[]
+  notices          Notice[]
 }
 
 model User {
   id                 Int         @id @default(autoincrement())
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
+  nickname           String      @unique
   universalAccountId String      @unique
   manners            Int
   intro              String
@@ -97,6 +99,15 @@ model TimeFrame {
   end         DateTime
   applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
   applyFormId Int
+}
+
+model Notice {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  content     String
+  studyId     Int
+  study       Study     @relation(fields: [studyId], references: [id])
 }
 
 enum StudyStatus {
