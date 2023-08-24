@@ -5,6 +5,7 @@ import { UpdateStudyDto } from './dto/update-study.dto';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
+import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 
 @Controller()
 export class StudyController {
@@ -28,6 +29,11 @@ export class StudyController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
     return this.studyService.findOne(+id);
+  }
+
+  @Get(':id/notices')
+  findNotices(@Param('id') id: string): Promise<GetNoticeResponseDto[]> {
+    return this.studyService.findNotices(+id);
   }
 
   @Patch(':id')
