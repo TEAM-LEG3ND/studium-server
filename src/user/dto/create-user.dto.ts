@@ -4,6 +4,10 @@ import { IsNumber, IsString } from 'class-validator';
 export class CreateUserDto {
     @ApiProperty()
     @IsString()
+    readonly nickname: string;
+
+    @ApiProperty()
+    @IsString()
     readonly universalAccountId: string;
 
     @ApiProperty()

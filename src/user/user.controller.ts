@@ -12,6 +12,12 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('check-nickname/:nickname')
+  checkNickname(@Param('nickname') nickname: string) {
+    // todo.
+    return ;
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
