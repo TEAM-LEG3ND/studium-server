@@ -12,6 +12,7 @@ import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
 import { NoticeModule } from './notice/notice.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NoticeModule } from './notice/notice.module';
     InternalUserModule,
     UserModule,
     StudyModule,
+    BookmarkModule,
     TagModule,
     WarmupModule,
     QuestionModule,
@@ -63,6 +65,10 @@ import { NoticeModule } from './notice/notice.module';
       {
         path: 'api/v1/notice',
         module: NoticeModule,
+      },
+      {
+        path: 'api/v1/bookmark',
+        module: BookmarkModule,
       },
     ]),
     AnswerModule,
