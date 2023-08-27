@@ -32,6 +32,7 @@ model Study {
   questions        Question[]
   applyForms       ApplyForm[]
   notices          Notice[]
+  Bookmark         Bookmark[]
 }
 
 model User {
@@ -45,7 +46,18 @@ model User {
   profileURL         String
   applyForms         ApplyForm[]
   membersOf          Member[]
-  studyJoined        Study[]
+  Study              Study[]
+  Bookmark           Bookmark[]
+}
+
+model Bookmark {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          Int
+  studyId         Int
+  userBookmarked  User     @relation(fields: [userId], references: [id])
+  studyBookmarked Study    @relation(fields: [studyId], references: [id])
 }
 
 model Member {
@@ -102,12 +114,12 @@ model TimeFrame {
 }
 
 model Notice {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  content     String
-  studyId     Int
-  study       Study     @relation(fields: [studyId], references: [id])
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  studyId   Int
+  study     Study    @relation(fields: [studyId], references: [id])
 }
 
 enum StudyStatus {
