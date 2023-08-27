@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
+import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
+import { StudiumException } from 'src/common/studium-exception';
 
 @Injectable()
 export class StudyService {
@@ -57,6 +59,11 @@ export class StudyService {
         questions: true,
       },
     });
+
+    if (!study) {
+      throw new InternalServerErrorException(StudiumException.dataNotFound);
+    }
+    
     return GetStudyResponseDto.fromStudy(study);
   }
 
@@ -156,5 +163,14 @@ export class StudyService {
       },
     });
     return UpdateStudyResponseDto.fromStudy(study);
+  }
+
+  async findNotices(id: number): Promise<GetNoticeResponseDto[]> {
+    const study = await this.findOne(id);
+    const notices = await this.prisma.notice.findMany({
+      where: { studyId : study.id }
+    });
+
+    return notices.map((notice) => GetNoticeResponseDto.fromNotice(notice));
   }
 }
