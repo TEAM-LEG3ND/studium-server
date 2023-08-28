@@ -14,12 +14,7 @@ export class UserController {
 
   @Get('check-nickname/:nickname')
   checkNickname(@Param('nickname') nickname: string) {
-<<<<<<< HEAD
     return this.userService.checkNickname(nickname);
-=======
-    // todo.
-    return ;
->>>>>>> main
   }
 
   @Get(':id')
