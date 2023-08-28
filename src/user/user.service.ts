@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUserResponseDto } from './dto/get-user-response.dto';
 import { CreateUserResponseDto } from './dto/create-user-response.dto';
 import { UpdateUserResponseDto } from './dto/update-user-response.dto';
+import { StudiumException } from 'src/common/studium-exception';
 
 @Injectable()
 export class UserService {
@@ -32,6 +33,11 @@ export class UserService {
       return GetUserResponseDto.fromUser(user);
     }
 
+    async checkNickname(nickname: string) {
+        const user = await this.prisma.user.findUnique({ where: { nickname } });
+        return { available: !user };
+    }
+
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
       const user: User = await this.prisma.user.create({
           data: {
@@ -44,6 +50,14 @@ export class UserService {
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
       const user: GetUserResponseDto = await this.findOne(userId);
+      const { nickname } = updateUserDto;
+
+      const ok = (await this.checkNickname(nickname)).available;
+
+      if (!ok) {
+          throw new InternalServerErrorException();
+      }
+
       const updatedUser: User = await this.prisma.user.update({
           where: { id: user['id'] },
           data: updateUserDto,

@@ -4,6 +4,11 @@ import { IsOptional, IsNumber, IsString } from 'class-validator';
 export class UpdateUserDto {
     @IsOptional()
     @ApiProperty()
+    @IsString()
+    readonly nickname: string;
+
+    @IsOptional()
+    @ApiProperty()
     @IsNumber()
     readonly manners: number;
 
