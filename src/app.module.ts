@@ -11,6 +11,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
 import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AnswerModule } from './answer/answer.module';
     QuestionModule,
     ApplyFormModule,
     AnswerModule,
+    NoticeModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -58,8 +60,13 @@ import { AnswerModule } from './answer/answer.module';
         path: 'api/v1/answer',
         module: AnswerModule,
       },
+      {
+        path: 'api/v1/notice',
+        module: NoticeModule,
+      },
     ]),
     AnswerModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

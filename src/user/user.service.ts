@@ -19,7 +19,7 @@ export class UserService {
 
     async findOne(userId: number): Promise<GetUserResponseDto>{
         if (isNaN(userId)) {
-            throw new BadRequestException('Bad request for find unique user.');
+            throw new BadRequestException(StudiumException.idFormatError);
         }
 
         const user: User = await this.prisma.user.findUnique({
@@ -27,7 +27,7 @@ export class UserService {
         });
 
         if (!user) {
-            throw new InternalServerErrorException(`User with ID: ${userId} not Found.`);
+            throw new InternalServerErrorException(StudiumException.dataNotFound);
         } 
 
       return GetUserResponseDto.fromUser(user);
