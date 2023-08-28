@@ -35,7 +35,29 @@ export class UserService {
 
     async checkNickname(nickname: string) {
         const user = await this.prisma.user.findUnique({ where: { nickname } });
-        return { available: !user };
+        return { available: !user && this.checkNicknameAvailability(nickname) };
+    }
+
+    checkNicknameAvailability(nickname: string): boolean {
+        const reservedNicknames = [
+            'admin',
+            'root',
+            'moderator',
+        ];
+
+        if (nickname.length < 3 || nickname.length > 20) {
+            return false;
+        }
+
+        if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
+            return false;
+        }
+
+        if(reservedNicknames.includes(nickname)) {
+            return false;
+        }
+
+        return true;
     }
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
