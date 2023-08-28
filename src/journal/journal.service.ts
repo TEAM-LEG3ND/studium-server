@@ -33,21 +33,23 @@ export class JournalService {
     }
 
     async create(createJournalDto: CreateJournalDto): Promise<CreateJournalResponseDto> {
-        const {authorId, ...data} = createJournalDto;
+        const {authorId, studyId, ...data} = createJournalDto;
         const journal = await this.prisma.journal.create({
             data: {
                 author: { connect: { id: authorId } },
+                study: { connect: {id: studyId } },
                 ...data,
             },
             include: {
                 author: true,
+                study: true,
             }
         });
         return CreateJournalResponseDto.fromJournal(journal);
     }
 
     async update(id: number, updateJournalDto: UpdateJournalDto) {
-        const { authorId, ...data } = updateJournalDto;
+        const { authorId, studyId, ...data } = updateJournalDto;
         const journal = await this.prisma.journal.update({
             where: { id },
             data: {

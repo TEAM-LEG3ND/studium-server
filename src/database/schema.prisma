@@ -33,6 +33,7 @@ model Study {
   questions        Question[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")
+  journals         Journal[]
 }
 
 model User {
@@ -130,7 +131,9 @@ model Journal {
   title     String
   content   String
   authorId  Int
+  studyId   Int
   author    User     @relation(fields: [authorId], references: [id])
+  study     Study    @relation(fields: [studyId], references: [id])
 }
 
 enum StudyStatus {

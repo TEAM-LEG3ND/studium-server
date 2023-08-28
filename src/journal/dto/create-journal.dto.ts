@@ -13,4 +13,8 @@ export class CreateJournalDto {
     @ApiProperty()
     @IsNumber()
     readonly authorId: number;
+
+    @ApiProperty()
+    @IsNumber()
+    readonly studyId: number;
 }

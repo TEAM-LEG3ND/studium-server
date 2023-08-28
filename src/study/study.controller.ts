@@ -6,6 +6,7 @@ import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
+import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
 
 @Controller()
 export class StudyController {
@@ -34,6 +35,11 @@ export class StudyController {
   @Get(':id/notices')
   findNotices(@Param('id') id: string): Promise<GetNoticeResponseDto[]> {
     return this.studyService.findNotices(+id);
+  }
+
+  @Get(':id/journals')
+  findJournals(@Param('id') id: string): Promise<GetJournalResponseDto[]> {
+    return this.studyService.findJournals(+id);
   }
 
   @Patch(':id')

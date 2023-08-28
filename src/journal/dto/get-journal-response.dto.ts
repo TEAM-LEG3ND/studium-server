@@ -27,16 +27,21 @@ export class GetJournalResponseDto {
     @IsNumber()
     readonly authorId: number;
 
-    constructor(id: number, createdAt: Date, updatedAt: Date, title: string, content: string, authorId: number) {
+    @ApiProperty()
+    @IsNumber()
+    readonly studyId: number;
+
+    constructor(id: number, createdAt: Date, updatedAt: Date, title: string, content: string, authorId: number, studyId: number) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.title = title;
         this.content = content;
         this.authorId = authorId;
+        this.studyId = studyId;
     }
 
     static fromJournal(journal: Journal) {
-        return new GetJournalResponseDto(journal.id, journal.createdAt, journal.updatedAt, journal.title, journal.content, journal.authorId);
+        return new GetJournalResponseDto(journal.id, journal.createdAt, journal.updatedAt, journal.title, journal.content, journal.authorId, journal.studyId);
     }
 }

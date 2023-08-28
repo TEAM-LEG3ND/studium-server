@@ -7,6 +7,7 @@ import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 import { StudiumException } from 'src/common/studium-exception';
+import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
 
 @Injectable()
 export class StudyService {
@@ -172,5 +173,14 @@ export class StudyService {
     });
 
     return notices.map((notice) => GetNoticeResponseDto.fromNotice(notice));
+  }
+
+  async findJournals(id: number): Promise<GetJournalResponseDto[]> {
+    const study = await this.findOne(id);
+    const journals = await this.prisma.journal.findMany({
+      where: { studyId: study.id },
+    });
+
+    return journals.map((journal) => GetJournalResponseDto.fromJournal(journal));
   }
 }

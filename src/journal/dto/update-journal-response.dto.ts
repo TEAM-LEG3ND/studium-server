@@ -8,9 +8,10 @@ export class UpdateJournalResponseDto extends CreateJournalResponseDto {
         updatedAt: Date,
         title: string,
         content: string,
-        authorId: number
+        authorId: number,
+        studyId: number
     ) {
-        super(id, createdAt, updatedAt, title, content, authorId);
+        super(id, createdAt, updatedAt, title, content, authorId, studyId);
     }
 
     static fromJournal(journal: Journal) {
@@ -20,7 +21,8 @@ export class UpdateJournalResponseDto extends CreateJournalResponseDto {
             journal.updatedAt,
             journal.title,
             journal.content,
-            journal.authorId
+            journal.authorId,
+            journal.studyId
         );
     }
 }
