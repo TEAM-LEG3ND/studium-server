@@ -57,11 +57,7 @@ export class NoticeService {
     }
 
     async remove(id: number) {
-        const noticeToDelete = await this.prisma.notice.findUnique({
-            where: { id },
-            include: { study: true },
-        });
-
+        const noticeToDelete = await this.findOne(id);
         return await this.prisma.notice.delete({ where: { id: noticeToDelete.id } });
     }
 }

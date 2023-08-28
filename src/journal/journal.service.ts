@@ -2,6 +2,10 @@ import { InternalServerErrorException, BadRequestException, Injectable } from '@
 import { PrismaService } from 'src/database/prisma.service';
 import { GetJournalResponseDto } from './dto/get-journal-response.dto';
 import { StudiumException } from 'src/common/studium-exception';
+import { CreateJournalResponseDto } from './dto/create-journal-response.dto';
+import { UpdateJournalDto } from './dto/update-journal.dto';
+import { CreateJournalDto } from './dto/create-journal.dto';
+import { UpdateJournalResponseDto } from './dto/update-journal-response.dto';
 
 @Injectable()
 export class JournalService {
@@ -26,5 +30,35 @@ export class JournalService {
         }
 
         return GetJournalResponseDto.fromJournal(journal);
+    }
+
+    async create(createJournalDto: CreateJournalDto): Promise<CreateJournalResponseDto> {
+        const {authorId, ...data} = createJournalDto;
+        const journal = await this.prisma.journal.create({
+            data: {
+                author: { connect: { id: authorId } },
+                ...data,
+            },
+            include: {
+                author: true,
+            }
+        });
+        return CreateJournalResponseDto.fromJournal(journal);
+    }
+
+    async update(id: number, updateJournalDto: UpdateJournalDto) {
+        const { authorId, ...data } = updateJournalDto;
+        const journal = await this.prisma.journal.update({
+            where: { id },
+            data: {
+                ...data,
+            }
+        });
+        return UpdateJournalResponseDto.fromJournal(journal);
+    }
+
+    async remove(id: number) {
+        const journalToDelete = await this.findOne(id);
+        return await this.prisma.journal.delete({ where: { id: journalToDelete.id } });
     }
 }

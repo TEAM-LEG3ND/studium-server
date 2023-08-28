@@ -9,15 +9,15 @@ export class CreateNoticeResponseDto {
 
     @ApiProperty()
     @IsDate()
-    readonly createdAt: Date
+    readonly createdAt: Date;
     
     @ApiProperty()
     @IsDate()
-    readonly updatedAt: Date
+    readonly updatedAt: Date;
 
     @ApiProperty()
     @IsString()
-    readonly content: String
+    readonly content: String;
 
     @ApiProperty()
     @IsNumber()
