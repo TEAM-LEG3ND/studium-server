@@ -12,6 +12,14 @@ class AnswerPair {
   text: string;
 }
 
+class TimeFrame {
+  @ApiProperty()
+  start: Date;
+
+  @ApiProperty()
+  end: Date;
+}
+
 export class CreateApplyFormDto {
   @ApiProperty()
   @IsNumber()
@@ -25,4 +33,9 @@ export class CreateApplyFormDto {
   @ValidateNested({ each: true })
   @Type(() => AnswerPair)
   answers: AnswerPair[];
+
+  @ApiProperty({ type: [TimeFrame] })
+  @ValidateNested({ each: true })
+  @Type(() => TimeFrame)
+  timeFrames: TimeFrame[];
 }

@@ -10,6 +10,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
 import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
+import { TimeFrameModule } from './timeFrame/timeframe.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AnswerModule } from './answer/answer.module';
     QuestionModule,
     ApplyFormModule,
     AnswerModule,
+    TimeFrameModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -56,8 +58,11 @@ import { AnswerModule } from './answer/answer.module';
         path: 'api/v1/answer',
         module: AnswerModule,
       },
+      {
+        path: 'api/v1/timeframe',
+        module: TimeFrameModule,
+      },
     ]),
-    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
