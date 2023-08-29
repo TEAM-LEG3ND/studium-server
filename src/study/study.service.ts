@@ -32,6 +32,7 @@ export class StudyService {
         ...data,
       },
       include: {
+        leader: true,
         tags: true,
         questions: true,
       },
@@ -42,6 +43,7 @@ export class StudyService {
   async findAll(): Promise<GetStudyResponseDto[]> {
     const studies = await this.prisma.study.findMany({
       include: {
+        leader: true,
         tags: true,
         questions: true,
       },
@@ -53,6 +55,7 @@ export class StudyService {
     const study = await this.prisma.study.findUnique({
       where: { id },
       include: {
+        leader: true,
         tags: true,
         questions: true,
       },
@@ -84,6 +87,7 @@ export class StudyService {
       },
 
       include: {
+        leader: true,
         tags: true,
         questions: true,
       },

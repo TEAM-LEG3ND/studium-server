@@ -4,11 +4,15 @@ import { IsString, IsDate, IsNumber, IsEnum } from 'class-validator';
 import { GetTagResponseDto } from 'src/tag/dto/get-tag-response.dto';
 import { Location, getLocationEnumValue } from './enums';
 import { GetQuestionResponseDto } from 'src/question/dto/get-question-response.dto';
+import { GetUserResponseDto } from 'src/user/dto/get-user-response.dto';
 
 export class GetStudyResponseDto {
   @ApiProperty()
   @IsString()
   readonly id: number;
+
+  @ApiProperty({ type: [GetUserResponseDto] })
+  readonly leader: GetUserResponseDto;
 
   @ApiProperty()
   readonly createdAt: Date;
@@ -68,6 +72,7 @@ export class GetStudyResponseDto {
 
   constructor(
     id: number,
+    leader: GetUserResponseDto,
     createdAt: Date,
     updatedAt: Date,
     name: string,
@@ -85,6 +90,7 @@ export class GetStudyResponseDto {
     questions: GetQuestionResponseDto[],
   ) {
     this.id = id;
+    this.leader = leader;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.name = name;
@@ -106,6 +112,7 @@ export class GetStudyResponseDto {
     const location: Location = getLocationEnumValue(study.location);
     return new GetStudyResponseDto(
       study.id,
+      study['leader'],
       study.createdAt,
       study.updatedAt,
       study.name,
