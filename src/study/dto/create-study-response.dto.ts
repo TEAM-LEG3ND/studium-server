@@ -66,6 +66,7 @@ export class CreateStudyResponseDto {
   @ApiProperty()
   readonly location: Location;
 
+
   @ApiProperty({ type: [CreateQuestionDto], default: [] })
   readonly questions: CreateQuestionDto[];
 
