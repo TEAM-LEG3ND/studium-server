@@ -1,3 +1,4 @@
+import { WarmupModule } from './common/warmup/warmup.module';
 import { Module, Logger } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AppController } from './app.controller';
@@ -11,6 +12,7 @@ import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
 import { TimeFrameModule } from './timeFrame/timeframe.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
   imports: [
@@ -23,6 +25,11 @@ import { TimeFrameModule } from './timeFrame/timeframe.module';
     ApplyFormModule,
     AnswerModule,
     TimeFrameModule,
+    WarmupModule,
+    QuestionModule,
+    ApplyFormModule,
+    AnswerModule,
+    NoticeModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -62,7 +69,13 @@ import { TimeFrameModule } from './timeFrame/timeframe.module';
         path: 'api/v1/timeframe',
         module: TimeFrameModule,
       },
+      {
+        path: 'api/v1/notice',
+        module: NoticeModule,
+      },
     ]),
+    AnswerModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

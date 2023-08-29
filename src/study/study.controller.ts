@@ -5,6 +5,7 @@ import { UpdateStudyDto } from './dto/update-study.dto';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
+import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 
 @Controller()
 export class StudyController {
@@ -20,15 +21,30 @@ export class StudyController {
     return this.studyService.findAll();
   }
 
+  @Get('on-fire')
+  getStudiesOnFire(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesOnFire();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
     return this.studyService.findOne(+id);
+  }
+
+  @Get(':id/notices')
+  findNotices(@Param('id') id: string): Promise<GetNoticeResponseDto[]> {
+    return this.studyService.findNotices(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
     return this.studyService.update(+id, updateStudyDto);
   }
+
+  @Patch(':id/increment-views')
+  incrementViewCount(@Param('id') id:string): Promise<UpdateStudyResponseDto> {
+    return this.studyService.incrementViewCount(+id);
+  } 
 
   @Delete(':id')
   remove(@Param('id') id: string) {

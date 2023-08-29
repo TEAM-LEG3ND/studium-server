@@ -20,6 +20,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
     recruitStartDate: Date,
     recruitEndDate: Date,
     intro: string,
+    rules: string[],
     startDate: Date,
     endDate: Date,
     locationDetail: string,
@@ -27,6 +28,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
     total: number,
     recruited: number,
     templateContent: string,
+    viewCount: number,
     tags: CreateTagDto[],
     questions: GetQuestionResponseDto[],
   ) {
@@ -39,6 +41,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       recruitStartDate,
       recruitEndDate,
       intro,
+      rules,
       startDate,
       endDate,
       locationDetail,
@@ -46,6 +49,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       total,
       recruited,
       templateContent,
+      viewCount,
       tags,
       questions,
     );
@@ -62,6 +66,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
+      study.rules,
       study.startDate,
       study.endDate,
       study.locationDetail,
@@ -69,6 +74,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
       study.total,
       study.recruited,
       study.templateContent,
+      study.viewCount,
       study['tags'],
       study['questions'],
     );

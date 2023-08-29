@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
+import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
+import { StudiumException } from 'src/common/studium-exception';
 
 @Injectable()
 export class StudyService {
@@ -60,6 +62,11 @@ export class StudyService {
         questions: true,
       },
     });
+
+    if (!study) {
+      throw new InternalServerErrorException(StudiumException.dataNotFound);
+    }
+    
     return GetStudyResponseDto.fromStudy(study);
   }
 
@@ -124,5 +131,50 @@ export class StudyService {
       },
     });
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
+  }
+
+  async getStudiesOnFire(): Promise<GetStudyResponseDto[]> {
+    const THREE_WEEKS_IN_MILLI_SEC = 3 * 7 * 24 * 60 * 60 * 1000;
+    const now = new Date();
+    const threeWeeksAgo = new Date(now.getTime() - THREE_WEEKS_IN_MILLI_SEC);
+
+    const studies = await this.prisma.study.findMany({
+      where: {
+        createdAt: {
+          gte: threeWeeksAgo, // greater than or equal to
+          lte: now            // less than or equal to
+        }
+      },
+      include: {
+        tags: true,
+        questions: true,
+      },
+      orderBy: {
+        viewCount: 'desc',
+      },
+      take: 12,
+    });
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
+  }
+
+  async incrementViewCount(id: number): Promise<UpdateStudyResponseDto> {    
+    const study = await this.prisma.study.update({
+      where : { id },
+      data : {
+        viewCount : {
+          increment: 1
+        }
+      },
+    });
+    return UpdateStudyResponseDto.fromStudy(study);
+  }
+
+  async findNotices(id: number): Promise<GetNoticeResponseDto[]> {
+    const study = await this.findOne(id);
+    const notices = await this.prisma.notice.findMany({
+      where: { studyId : study.id }
+    });
+
+    return notices.map((notice) => GetNoticeResponseDto.fromNotice(notice));
   }
 }

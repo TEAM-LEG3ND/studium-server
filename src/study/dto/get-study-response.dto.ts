@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Study } from '@prisma/client';
-import { IsString, IsDate, IsNumber, IsEnum } from 'class-validator';
+import { IsString, IsDate, IsNumber, IsEnum, IsArray } from 'class-validator';
 import { GetTagResponseDto } from 'src/tag/dto/get-tag-response.dto';
 import { Location, getLocationEnumValue } from './enums';
 import { GetQuestionResponseDto } from 'src/question/dto/get-question-response.dto';
@@ -37,6 +37,10 @@ export class GetStudyResponseDto {
   readonly intro: string;
 
   @ApiProperty()
+  @IsArray()
+  readonly rules: string[];
+
+  @ApiProperty()
   @IsDate()
   readonly startDate: Date;
 
@@ -60,6 +64,10 @@ export class GetStudyResponseDto {
   @IsString()
   readonly templateContent: string;
 
+  @ApiProperty({ required: false })
+  @IsNumber()
+  readonly viewCount: number;
+
   @ApiProperty({ type: [GetTagResponseDto] })
   readonly tags: GetTagResponseDto[];
 
@@ -70,7 +78,6 @@ export class GetStudyResponseDto {
   @ApiProperty({ type: [GetQuestionResponseDto] })
   readonly questions: GetQuestionResponseDto[];
 
-
   constructor(
     id: number,
     leader: GetUserResponseDto,
@@ -80,6 +87,7 @@ export class GetStudyResponseDto {
     recruitStartDate: Date,
     recruitEndDate: Date,
     intro: string,
+    rules: string[],
     startDate: Date,
     endDate: Date,
     locationDetail: string,
@@ -87,6 +95,7 @@ export class GetStudyResponseDto {
     total: number,
     recruited: number,
     templateContent: string,
+    viewCount: number,
     tags: GetTagResponseDto[],
     questions: GetQuestionResponseDto[],
   ) {
@@ -98,6 +107,7 @@ export class GetStudyResponseDto {
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
     this.intro = intro;
+    this.rules = rules;
     this.startDate = startDate;
     this.endDate = endDate;
     this.locationDetail = locationDetail;
@@ -105,6 +115,7 @@ export class GetStudyResponseDto {
     this.total = total;
     this.recruited = recruited;
     this.templateContent = templateContent;
+    this.viewCount = viewCount;
     this.tags = tags;
     this.questions = questions;
   }
@@ -120,6 +131,7 @@ export class GetStudyResponseDto {
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
+      study.rules,
       study.startDate,
       study.endDate,
       study.locationDetail,
@@ -127,6 +139,7 @@ export class GetStudyResponseDto {
       study.total,
       study.recruited,
       study.templateContent,
+      study.viewCount,
       study['tags'],
       study['questions'],
     );

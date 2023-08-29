@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Study } from '@prisma/client';
-import { IsString, IsDate, IsNumber } from 'class-validator';
+import { IsString, IsDate, IsNumber, IsArray } from 'class-validator';
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 import { Location, getLocationEnumValue } from './enums';
 import { CreateQuestionDto } from 'src/question/dto/create-question.dto';
@@ -37,6 +37,10 @@ export class CreateStudyResponseDto {
   readonly intro: string;
 
   @ApiProperty()
+  @IsArray()
+  readonly rules: string[];
+
+  @ApiProperty()
   @IsDate()
   readonly startDate: Date;
 
@@ -60,12 +64,15 @@ export class CreateStudyResponseDto {
   @IsString()
   readonly templateContent: string;
 
+  @ApiProperty({ required: false })
+  @IsNumber()
+  readonly viewCount: number;
+
   @ApiProperty({ type: [CreateTagDto], default: [] })
   readonly tags: CreateTagDto[];
 
   @ApiProperty()
   readonly location: Location;
-
 
   @ApiProperty({ type: [CreateQuestionDto], default: [] })
   readonly questions: CreateQuestionDto[];
@@ -79,6 +86,7 @@ export class CreateStudyResponseDto {
     recruitStartDate: Date,
     recruitEndDate: Date,
     intro: string,
+    rules: string[],
     startDate: Date,
     endDate: Date,
     locationDetail: string,
@@ -86,6 +94,7 @@ export class CreateStudyResponseDto {
     total: number,
     recruited: number,
     templateContent: string,
+    viewCount: number,
     tags: CreateTagDto[],
     questions: CreateQuestionDto[],
   ) {
@@ -97,6 +106,7 @@ export class CreateStudyResponseDto {
     this.recruitStartDate = recruitStartDate;
     this.recruitEndDate = recruitEndDate;
     this.intro = intro;
+    this.rules = rules;
     this.startDate = startDate;
     this.endDate = endDate;
     this.locationDetail = locationDetail;
@@ -104,6 +114,7 @@ export class CreateStudyResponseDto {
     this.total = total;
     this.recruited = recruited;
     this.templateContent = templateContent;
+    this.viewCount = viewCount;
     this.tags = tags;
     this.questions = questions;
   }
@@ -119,6 +130,7 @@ export class CreateStudyResponseDto {
       study.recruitStartDate,
       study.recruitEndDate,
       study.intro,
+      study.rules,
       study.startDate,
       study.endDate,
       study.locationDetail,
@@ -126,6 +138,7 @@ export class CreateStudyResponseDto {
       study.total,
       study.recruited,
       study.templateContent,
+      study.viewCount,
       study['tags'],
       study['questions'],
     );
