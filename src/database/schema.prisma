@@ -24,16 +24,16 @@ model Study {
   locationDetail   String
   templateContent  String
   total            Int
-  viewCount        Int         @default(0)
   location         Location
+  viewCount        Int         @default(0)
   applyForms       ApplyForm[]
   Bookmark         Bookmark[]
-  Journal          Journal[]
   member           Member[]
   notices          Notice[]
   questions        Question[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")
+  journals         Journal[]
 }
 
 model User {
@@ -47,9 +47,9 @@ model User {
   nickname           String      @unique
   applyForms         ApplyForm[]
   Bookmark           Bookmark[]
-  Journal            Journal[]
   membersOf          Member[]
   studyJoined        Study[]
+  journals           Journal[]
 }
 
 model Member {
@@ -127,13 +127,13 @@ model Bookmark {
 model Journal {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   title     String
   content   String
   authorId  Int
   studyId   Int
-  User      User     @relation(fields: [authorId], references: [id])
-  Study     Study    @relation(fields: [studyId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+  study     Study    @relation(fields: [studyId], references: [id])
 }
 
 enum StudyStatus {

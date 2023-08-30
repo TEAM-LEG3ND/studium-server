@@ -25,5 +25,10 @@ export class NoticeController {
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateNoticeDto: UpdateNoticeDto) {
         return this.noticeService.update(+id, updateNoticeDto);
-    } 
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.noticeService.remove(+id);
+    }
 }

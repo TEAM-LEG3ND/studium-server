@@ -33,6 +33,33 @@ export class UserService {
       return GetUserResponseDto.fromUser(user);
     }
 
+    async checkNickname(nickname: string) {
+        const user = await this.prisma.user.findUnique({ where: { nickname } });
+        return { available: !user && this.checkNicknameAvailability(nickname) };
+    }
+
+    checkNicknameAvailability(nickname: string): boolean {
+        const reservedNicknames = [
+            'admin',
+            'root',
+            'moderator',
+        ];
+
+        if (nickname.length < 3 || nickname.length > 20) {
+            return false;
+        }
+
+        if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
+            return false;
+        }
+
+        if(reservedNicknames.includes(nickname)) {
+            return false;
+        }
+
+        return true;
+    }
+
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
       const user: User = await this.prisma.user.create({
           data: {
@@ -45,6 +72,14 @@ export class UserService {
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
       const user: GetUserResponseDto = await this.findOne(userId);
+      const { nickname } = updateUserDto;
+
+      const ok = (await this.checkNickname(nickname)).available;
+
+      if (!ok) {
+          throw new InternalServerErrorException();
+      }
+
       const updatedUser: User = await this.prisma.user.update({
           where: { id: user['id'] },
           data: updateUserDto,
