@@ -12,6 +12,7 @@ import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
 import { NoticeModule } from './notice/notice.module';
+import { JournalModule } from './journal/journal.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { NoticeModule } from './notice/notice.module';
     ApplyFormModule,
     AnswerModule,
     NoticeModule,
+    JournalModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -64,9 +66,11 @@ import { NoticeModule } from './notice/notice.module';
         path: 'api/v1/notice',
         module: NoticeModule,
       },
+      {
+        path: 'api/v1/journal',
+        module: JournalModule,
+      },
     ]),
-    AnswerModule,
-    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

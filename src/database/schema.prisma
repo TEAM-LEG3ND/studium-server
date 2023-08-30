@@ -14,8 +14,6 @@ model Study {
   updatedAt        DateTime    @updatedAt
   intro            String
   rules            String[]
-  location         Location
-  locationDetail   String
   status           StudyStatus @default(RECRUITING)
   endDate          DateTime
   recruitEndDate   DateTime
@@ -23,29 +21,35 @@ model Study {
   startDate        DateTime
   name             String
   recruited        Int
-  total            Int
+  locationDetail   String
   templateContent  String
+  total            Int
+  location         Location
   viewCount        Int         @default(0)
+  applyForms       ApplyForm[]
+  Bookmark         Bookmark[]
   member           Member[]
+  notices          Notice[]
+  questions        Question[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")
-  questions        Question[]
-  applyForms       ApplyForm[]
-  notices          Notice[]
+  journals         Journal[]
 }
 
 model User {
   id                 Int         @id @default(autoincrement())
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
-  nickname           String      @unique
   universalAccountId String      @unique
   manners            Int
   intro              String
   profileURL         String
+  nickname           String      @unique
   applyForms         ApplyForm[]
+  Bookmark           Bookmark[]
   membersOf          Member[]
   studyJoined        Study[]
+  journals           Journal[]
 }
 
 model Member {
@@ -69,45 +73,67 @@ model ApplyForm {
   userId     Int
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
-  study      Study       @relation(fields: [studyId], references: [id])
   studyId    Int
-  user       User        @relation(fields: [userId], references: [id])
   answers    Answer[]
+  study      Study       @relation(fields: [studyId], references: [id])
+  user       User        @relation(fields: [userId], references: [id])
   timeFrames TimeFrame[]
 }
 
 model Question {
   id      Int      @id @default(autoincrement())
   text    String
-  study   Study    @relation(fields: [studyId], references: [id])
   studyId Int
   Answer  Answer[]
+  study   Study    @relation(fields: [studyId], references: [id])
 }
 
 model Answer {
   id          Int       @id @default(autoincrement())
   text        String
-  question    Question  @relation(fields: [questionId], references: [id])
   questionId  Int
-  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
   applyFormId Int
+  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
+  question    Question  @relation(fields: [questionId], references: [id])
 }
 
 model TimeFrame {
   id          Int       @id @default(autoincrement())
   start       DateTime
   end         DateTime
-  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
   applyFormId Int
+  applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
 }
 
 model Notice {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  content     String
-  studyId     Int
-  study       Study     @relation(fields: [studyId], references: [id])
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  studyId   Int
+  study     Study    @relation(fields: [studyId], references: [id])
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  userId    Int
+  studyId   Int
+  Study     Study    @relation(fields: [studyId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Journal {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String
+  authorId  Int
+  studyId   Int
+  author    User     @relation(fields: [authorId], references: [id])
+  study     Study    @relation(fields: [studyId], references: [id])
 }
 
 enum StudyStatus {
