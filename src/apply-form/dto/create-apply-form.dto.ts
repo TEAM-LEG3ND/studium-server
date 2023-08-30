@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, ValidateNested, IsString } from 'class-validator';
+import { IsNumber, ValidateNested, IsString, IsDateString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class AnswerPair {
@@ -14,9 +14,11 @@ class AnswerPair {
 
 class TimeFrame {
   @ApiProperty()
+  @IsDateString()
   start: Date;
 
   @ApiProperty()
+  @IsDateString()
   end: Date;
 }
 

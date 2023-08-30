@@ -86,7 +86,6 @@ export class ApplyFormService {
           create: timeFrames.map((timeFrame) => ({
             start: timeFrame.start,
             end: timeFrame.end,
-            applyFormId: id, // Set the applyFormId to the current applyForm's id
           })),
         },
         ...data,
@@ -94,6 +93,7 @@ export class ApplyFormService {
 
       include: {
         answers: true,
+        timeFrames: true,
       },
     });
 
@@ -102,11 +102,17 @@ export class ApplyFormService {
   async remove(id: number) {
     const applyFormToDelete = await this.prisma.applyForm.findUnique({
       where: { id },
-      include: { answers: true }, // Include associated answers
+      include: { answers: true, timeFrames: true },
     });
+
     // Delete associated answers first
     await Promise.all(
       applyFormToDelete.answers.map((answer) => this.prisma.answer.delete({ where: { id: answer.id } })),
+    );
+
+    // Delete associated timeFrames
+    await Promise.all(
+      applyFormToDelete.timeFrames.map((timeFrame) => this.prisma.timeFrame.delete({ where: { id: timeFrame.id } })),
     );
 
     return await this.prisma.applyForm.delete({ where: { id } });
