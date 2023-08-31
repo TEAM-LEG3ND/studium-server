@@ -11,6 +11,7 @@ import { InternalUserModule } from './internal-user/internal-user.module';
 import { QuestionModule } from './question/question.module';
 import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
+import { TimeFrameModule } from './timeFrame/timeframe.module';
 import { NoticeModule } from './notice/notice.module';
 import { JournalModule } from './journal/journal.module';
 
@@ -21,6 +22,10 @@ import { JournalModule } from './journal/journal.module';
     UserModule,
     StudyModule,
     TagModule,
+    QuestionModule,
+    ApplyFormModule,
+    AnswerModule,
+    TimeFrameModule,
     WarmupModule,
     QuestionModule,
     ApplyFormModule,
@@ -61,6 +66,10 @@ import { JournalModule } from './journal/journal.module';
       {
         path: 'api/v1/answer',
         module: AnswerModule,
+      },
+      {
+        path: 'api/v1/timeframe',
+        module: TimeFrameModule,
       },
       {
         path: 'api/v1/notice',

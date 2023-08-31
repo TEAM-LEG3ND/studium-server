@@ -15,23 +15,4 @@ export class QuestionService {
     const question = await this.prisma.question.findUnique({ where: { id } });
     return GetQuestionResponseDto.fromQuestion(question);
   }
-
-  /*
-  
-    async findOne(id: number): Promise<GetTagResponseDto> {
-      const tag = await this.prisma.tag.findUnique({ where: { id } });
-      return new GetTagResponseDto(tag);
-    }
-  
-    async update(id: number, updateTagDto: UpdateTagDto): Promise<UpdateTagResponseDto> {
-      const updatedTag = await this.prisma.tag.update({
-        where: { id },
-        data: updateTagDto,
-      });
-      return new UpdateTagResponseDto(updatedTag);
-    }
-  
-    async remove(id: number) {
-      return await this.prisma.tag.delete({ where: { id } });
-    }*/
 }

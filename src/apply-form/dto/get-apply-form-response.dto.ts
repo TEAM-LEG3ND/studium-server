@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ApplyForm } from '@prisma/client';
 import { IsString, IsNumber } from 'class-validator';
 import { GetAnswerResponseDto } from 'src/answer/dto/get-answer-response.dto';
+import { GetTimeFrameResponseDto } from 'src/timeFrame/dto/get-timeframe-response.dto';
 export class GetApplyFormResponseDto {
   @ApiProperty()
   @IsString()
@@ -24,6 +25,9 @@ export class GetApplyFormResponseDto {
   @ApiProperty({ type: [GetAnswerResponseDto] })
   readonly answers: GetAnswerResponseDto[];
 
+  @ApiProperty({ type: [GetTimeFrameResponseDto] })
+  readonly timeFrames: GetTimeFrameResponseDto[];
+
   constructor(
     id: number,
     createdAt: Date,
@@ -31,6 +35,7 @@ export class GetApplyFormResponseDto {
     userId: number,
     studyId: number,
     answers: GetAnswerResponseDto[],
+    timeFrames: GetTimeFrameResponseDto[],
   ) {
     this.id = id;
     this.createdAt = createdAt;
@@ -38,6 +43,7 @@ export class GetApplyFormResponseDto {
     this.userId = userId;
     this.studyId = studyId;
     this.answers = answers;
+    this.timeFrames = timeFrames;
   }
 
   static fromApplyForm(applyform: ApplyForm) {
@@ -48,6 +54,7 @@ export class GetApplyFormResponseDto {
       applyform.userId,
       applyform.studyId,
       applyform['answers'],
+      applyform['timeFrames'],
     );
   }
 }
