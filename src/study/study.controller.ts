@@ -27,6 +27,16 @@ export class StudyController {
     return this.studyService.getStudiesOnFire();
   }
 
+  @Get('sortTime')
+  getStudiesSortByTime(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesSortByTime();
+  }
+
+  @Get('sortViewCount')
+  getStudiesSortByViewCount(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesSortByViewCount();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
     return this.studyService.findOne(+id);
@@ -48,9 +58,9 @@ export class StudyController {
   }
 
   @Patch(':id/increment-views')
-  incrementViewCount(@Param('id') id:string): Promise<UpdateStudyResponseDto> {
+  incrementViewCount(@Param('id') id: string): Promise<UpdateStudyResponseDto> {
     return this.studyService.incrementViewCount(+id);
-  } 
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
