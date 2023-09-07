@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, ValidateNested, IsString, IsDateString } from 'class-validator';
+import { IsNumber, ValidateNested, IsString, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Days } from 'src/timeFrame/dto/enums';
 
 class AnswerPair {
   @ApiProperty()
@@ -14,12 +15,16 @@ class AnswerPair {
 
 class TimeFrame {
   @ApiProperty()
-  @IsDateString()
-  start: Date;
+  @IsEnum(Days)
+  day: Days;
 
   @ApiProperty()
-  @IsDateString()
-  end: Date;
+  @IsString()
+  starttime: string;
+
+  @ApiProperty()
+  @IsString()
+  endtime: string;
 }
 
 export class CreateApplyFormDto {

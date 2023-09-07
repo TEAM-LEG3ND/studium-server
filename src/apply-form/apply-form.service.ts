@@ -12,39 +12,34 @@ export class ApplyFormService {
   constructor(private prisma: PrismaService) {}
 
   async create(createApplyFormDto: CreateApplyFormDto): Promise<CreateApplyFormResponseDto> {
-    try {
-      const { userId, studyId, answers, timeFrames, ...data } = createApplyFormDto;
-      console.log('timeFrames:', timeFrames);
-      const applyForm: ApplyForm = await this.prisma.applyForm.create({
-        data: {
-          user: { connect: { id: userId } },
-          study: { connect: { id: studyId } },
-          answers: {
-            create: answers.map((answer) => ({
-              text: answer.text,
-              question: { connect: { id: answer.questionId } },
-            })),
-          },
-          timeFrames: {
-            create: timeFrames.map((timeFrame) => ({
-              start: timeFrame.start,
-              end: timeFrame.end,
-            })),
-          },
-          ...data,
+    const { userId, studyId, answers, timeFrames, ...data } = createApplyFormDto;
+    const applyForm: ApplyForm = await this.prisma.applyForm.create({
+      data: {
+        user: { connect: { id: userId } },
+        study: { connect: { id: studyId } },
+        answers: {
+          create: answers.map((answer) => ({
+            text: answer.text,
+            question: { connect: { id: answer.questionId } },
+          })),
         },
-        include: {
-          answers: true,
-          user: true,
-          study: true,
-          timeFrames: true,
+        timeFrames: {
+          create: timeFrames.map((timeFrame) => ({
+            day: timeFrame.day,
+            starttime: timeFrame.starttime,
+            endtime: timeFrame.endtime,
+          })),
         },
-      });
-      return CreateApplyFormResponseDto.fromApplyForm(applyForm);
-    } catch (error) {
-      // Handle errors and return appropriate response
-      console.error('Error creating apply form:', error);
-    }
+        ...data,
+      },
+      include: {
+        answers: true,
+        user: true,
+        study: true,
+        timeFrames: true,
+      },
+    });
+    return CreateApplyFormResponseDto.fromApplyForm(applyForm);
   }
 
   async findAll(): Promise<GetApplyFormResponseDto[]> {
@@ -62,6 +57,8 @@ export class ApplyFormService {
       where: { id },
       include: {
         answers: true,
+        user: true,
+        study: true,
         timeFrames: true,
       },
     });
@@ -84,8 +81,9 @@ export class ApplyFormService {
         timeFrames: {
           deleteMany: {},
           create: timeFrames.map((timeFrame) => ({
-            start: timeFrame.start,
-            end: timeFrame.end,
+            day: timeFrame.day,
+            starttime: timeFrame.starttime,
+            endtime: timeFrame.endtime,
           })),
         },
         ...data,
@@ -93,6 +91,8 @@ export class ApplyFormService {
 
       include: {
         answers: true,
+        user: true,
+        study: true,
         timeFrames: true,
       },
     });
@@ -105,12 +105,10 @@ export class ApplyFormService {
       include: { answers: true, timeFrames: true },
     });
 
-    // Delete associated answers first
     await Promise.all(
       applyFormToDelete.answers.map((answer) => this.prisma.answer.delete({ where: { id: answer.id } })),
     );
 
-    // Delete associated timeFrames
     await Promise.all(
       applyFormToDelete.timeFrames.map((timeFrame) => this.prisma.timeFrame.delete({ where: { id: timeFrame.id } })),
     );
