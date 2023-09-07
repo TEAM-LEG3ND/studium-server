@@ -67,7 +67,7 @@ export class StudyService {
     if (!study) {
       throw new InternalServerErrorException(StudiumException.dataNotFound);
     }
-    
+
     return GetStudyResponseDto.fromStudy(study);
   }
 
@@ -143,8 +143,8 @@ export class StudyService {
       where: {
         createdAt: {
           gte: threeWeeksAgo, // greater than or equal to
-          lte: now            // less than or equal to
-        }
+          lte: now, // less than or equal to
+        },
       },
       include: {
         tags: true,
@@ -158,13 +158,13 @@ export class StudyService {
     return studies.map((study) => GetStudyResponseDto.fromStudy(study));
   }
 
-  async incrementViewCount(id: number): Promise<UpdateStudyResponseDto> {    
+  async incrementViewCount(id: number): Promise<UpdateStudyResponseDto> {
     const study = await this.prisma.study.update({
-      where : { id },
-      data : {
-        viewCount : {
-          increment: 1
-        }
+      where: { id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
       },
     });
     return UpdateStudyResponseDto.fromStudy(study);
@@ -173,7 +173,7 @@ export class StudyService {
   async findNotices(id: number): Promise<GetNoticeResponseDto[]> {
     const study = await this.findOne(id);
     const notices = await this.prisma.notice.findMany({
-      where: { studyId : study.id }
+      where: { studyId: study.id },
     });
 
     return notices.map((notice) => GetNoticeResponseDto.fromNotice(notice));
@@ -186,5 +186,41 @@ export class StudyService {
     });
 
     return journals.map((journal) => GetJournalResponseDto.fromJournal(journal));
+  }
+
+  async getStudiesSortByTime(): Promise<GetStudyResponseDto[]> {
+    const studies = await this.prisma.study.findMany({
+      include: {
+        leader: true,
+        tags: true,
+        questions: true,
+      },
+      orderBy: {
+        createdAt: 'desc', // Sort by createdAt in ascending order
+      },
+    });
+
+    return studies.map((study) => GetStudyResponseDto.fromStudy(study));
+  }
+
+  async getStudiesSortByViewCount(): Promise<GetStudyResponseDto[]> {
+    try {
+      const studies = await this.prisma.study.findMany({
+        include: {
+          leader: true,
+          tags: true,
+          questions: true,
+        },
+        orderBy: {
+          viewCount: 'desc', // Sort by viewCount in descending order
+        },
+      });
+
+      return studies.map((study) => GetStudyResponseDto.fromStudy(study));
+    } catch (error) {
+      // Handle the error here, you can log it or return an error response
+      console.error('Error fetching studies:', error);
+      throw new Error('Failed to fetch studies');
+    }
   }
 }
