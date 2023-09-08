@@ -1,9 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Days } from './enums';
+import { IsEnum, IsString } from 'class-validator';
 
 export class CreateTimeFrameDto {
   @ApiProperty()
-  readonly start: Date;
+  @IsEnum(Days)
+  readonly day: Days;
 
   @ApiProperty()
-  readonly end: Date;
+  @IsString()
+  readonly starttime: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly endtime: string;
 }

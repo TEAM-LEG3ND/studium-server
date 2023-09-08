@@ -99,8 +99,9 @@ model Answer {
 
 model TimeFrame {
   id          Int       @id @default(autoincrement())
-  start       DateTime
-  end         DateTime
+  day         Days
+  starttime   String
+  endtime     String
   applyFormId Int
   applyForm   ApplyForm @relation(fields: [applyFormId], references: [id])
 }
@@ -157,4 +158,14 @@ enum MemberType {
 enum Location {
   ONLINE
   OFFLINE
+}
+
+enum Days {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
 }

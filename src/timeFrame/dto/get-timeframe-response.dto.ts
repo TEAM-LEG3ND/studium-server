@@ -1,20 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
-import { Question, TimeFrame } from '@prisma/client';
+import { TimeFrame } from '@prisma/client';
+import { Days } from './enums';
 
 export class GetTimeFrameResponseDto {
   @ApiProperty()
-  readonly start: Date;
+  readonly day: Days;
 
   @ApiProperty()
-  readonly end: Date;
+  readonly starttime: string;
 
-  constructor(start: Date, end: Date) {
-    this.start = start;
-    this.end = end;
+  @ApiProperty()
+  readonly endtime: string;
+
+  constructor(day: Days, starttime: string, endtime: string) {
+    this.day = day;
+    this.starttime = starttime;
+    this.endtime = endtime;
   }
+  GetTimeFrameResponseDto;
 
-  static fromTimeFrame(timeFrame: TimeFrame) {
-    return new GetTimeFrameResponseDto(timeFrame.start, timeFrame.end);
+  static fromTimeFrame(timeFrame: TimeFrame): GetTimeFrameResponseDto {
+    const day = Days[timeFrame.day];
+    return new GetTimeFrameResponseDto(day, timeFrame.starttime, timeFrame.endtime);
   }
 }

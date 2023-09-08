@@ -1,19 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TimeFrame } from '@prisma/client';
+import { Days } from './enums';
 
 export class CreateTimeFrameResponseDto {
   @ApiProperty()
-  readonly start: Date;
+  readonly day: Days;
 
   @ApiProperty()
-  readonly end: Date;
+  readonly starttime: string;
 
-  constructor(start: Date, end: Date) {
-    this.start = start;
-    this.end = end;
+  @ApiProperty()
+  readonly endtime: string;
+
+  constructor(day: Days, starttime: string, endtime: string) {
+    this.day = day;
+    this.starttime = starttime;
+    this.endtime = endtime;
   }
 
-  static fromTimeFrame(timeFrame: TimeFrame) {
-    return new CreateTimeFrameResponseDto(timeFrame.start, timeFrame.end);
+  static fromTimeFrame(timeFrame: TimeFrame): CreateTimeFrameResponseDto {
+    const day = Days[timeFrame.day];
+    return new CreateTimeFrameResponseDto(day, timeFrame.starttime, timeFrame.endtime);
   }
 }
