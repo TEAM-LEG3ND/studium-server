@@ -8,6 +8,7 @@ import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 import { StudiumException } from 'src/common/studium-exception';
 import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
+import { GetUserResponseDto } from 'src/user/dto/get-user-response.dto';
 
 @Injectable()
 export class StudyService {
@@ -198,6 +199,11 @@ export class StudyService {
     });
 
     return journals.map((journal) => GetJournalResponseDto.fromJournal(journal));
+  }
+
+  async findPendingMembers(id: number): Promise<GetUserResponseDto[]> {
+    // todo
+    return;
   }
 
   async getStudiesSortByTime(): Promise<GetStudyResponseDto[]> {
