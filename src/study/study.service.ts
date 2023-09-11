@@ -179,6 +179,18 @@ export class StudyService {
     return notices.map((notice) => GetNoticeResponseDto.fromNotice(notice));
   }
 
+  async findNotice(id: number): Promise<GetNoticeResponseDto> {
+    const study = await this.findOne(id);
+    const notice = await this.prisma.notice.findFirst({
+      where: { studyId: study.id },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return GetNoticeResponseDto.fromNotice(notice);
+  }
+
   async findJournals(id: number): Promise<GetJournalResponseDto[]> {
     const study = await this.findOne(id);
     const journals = await this.prisma.journal.findMany({
