@@ -20,12 +20,13 @@ export class WarmupService implements OnApplicationBootstrap {
       public_endpoints: publicEndpoints,
     };
 
-    this.httpService
-      .post(this.turnstileSyncEndpoint, requestBody)
-      .pipe(
-        tap((res) => console.log(res)),
-        map((res) => res.data),
-      )
-      .subscribe();
+    // disable temporarily for turnstile deploy issue
+    // this.httpService
+    //   .post(this.turnstileSyncEndpoint, requestBody)
+    //   .pipe(
+    //     tap((res) => console.log(res)),
+    //     map((res) => res.data),
+    //   )
+    //   .subscribe();
   }
 }
