@@ -22,3 +22,21 @@
       args:
         chdir: /Users/{{ user }}/Server
         executable: /bin/zsh
+    - name: Log into private registry and force re-authorization
+      become: True
+      shell: "/usr/bin/docker login {{ registry_host }} -u {{ registry_user }} -p {{ registry_password }}"
+      args:
+        chdir: "/home/{{ user }}/compose"
+        executable: /usr/bin/zsh
+    - name: Pull image
+      become: True
+      shell: "/usr/bin/docker pull {{ registry_host }}/studium-server:latest"
+      args:
+        chdir: "/home/{{ user }}/compose"
+        executable: "/usr/bin/zsh"
+    - name: Restart Container
+      become: True
+      shell: "/usr/bin/zsh node-env.sh && source ~/.zshrc && /usr/bin/docker service update --force --image {{ registry_host }}/studium-server:latest studium_studium-server"
+      args:
+        chdir: "/home/{{ user }}/compose"
+        executable: "/usr/bin/zsh"

@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
-import { tap, map } from 'rxjs';
+import { tap, map, catchError, of } from 'rxjs';
 
 @Injectable()
 export class WarmupService implements OnApplicationBootstrap {
-  readonly turnstileSyncEndpoint = 'https://api.server.d0lim.com/turnstile/internal/api/v1/service-endpoint';
+  readonly turnstileSyncEndpoint = 'https://turnstile.server.d0lim.com/internal/api/v1/service-endpoint';
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -20,13 +20,17 @@ export class WarmupService implements OnApplicationBootstrap {
       public_endpoints: publicEndpoints,
     };
 
-    // disable temporarily for turnstile deploy issue
-    // this.httpService
-    //   .post(this.turnstileSyncEndpoint, requestBody)
-    //   .pipe(
-    //     tap((res) => console.log(res)),
-    //     map((res) => res.data),
-    //   )
-    //   .subscribe();
+    this.httpService
+      .post(this.turnstileSyncEndpoint, requestBody)
+      .pipe(
+        catchError((err) =>
+          of({
+            data: `error occurred, ${err}`,
+          }),
+        ),
+        tap((res) => console.log(res)),
+        map((res) => res.data),
+      )
+      .subscribe();
   }
 }
