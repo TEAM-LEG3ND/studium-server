@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateApplyFormDto } from './dto/create-apply-form.dto';
 import { ApplyForm } from '@prisma/client';
@@ -6,6 +6,7 @@ import { CreateApplyFormResponseDto } from './dto/create-apply-form-response.dto
 import { GetApplyFormResponseDto } from './dto/get-apply-form-response.dto';
 import { UpdateApplyFormDto } from './dto/update-apply-form.dto';
 import { UpdateApplyFormResponseDto } from './dto/update-apply-form-response.dto';
+import { MemberStatus, MemberType } from 'src/member/dto/enums';
 
 @Injectable()
 export class ApplyFormService {
@@ -13,6 +14,19 @@ export class ApplyFormService {
 
   async create(createApplyFormDto: CreateApplyFormDto): Promise<CreateApplyFormResponseDto> {
     const { userId, studyId, answers, timeFrames, ...data } = createApplyFormDto;
+
+    // Check if the user has already applied to the same study
+    const existingApplyForm = await this.prisma.applyForm.findFirst({
+      where: {
+        userId,
+        studyId,
+      },
+    });
+
+    if (existingApplyForm) {
+      throw new ConflictException('User has already applied to this study.');
+    }
+
     const applyForm: ApplyForm = await this.prisma.applyForm.create({
       data: {
         user: { connect: { id: userId } },
@@ -39,6 +53,21 @@ export class ApplyFormService {
         timeFrames: true,
       },
     });
+
+    // Add user as a member
+    await this.prisma.member.create({
+      data: {
+        study: {
+          connect: { id: studyId },
+        },
+        user: {
+          connect: { id: userId },
+        },
+        status: MemberStatus.pending,
+        type: MemberType.member,
+      },
+    });
+
     return CreateApplyFormResponseDto.fromApplyForm(applyForm);
   }
 
