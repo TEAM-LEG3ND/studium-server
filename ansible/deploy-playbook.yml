@@ -18,7 +18,7 @@
         executable: "/usr/bin/zsh"
     - name: Restart Container
       become: True
-      shell: "/usr/bin/zsh node-env.sh && source ~/.zshrc && /usr/bin/docker service update --force --image {{ registry_host }}/studium-server:latest studium_studium-server"
+      shell: "/usr/bin/zsh node-env.sh && source ~/.zshrc && /usr/bin/docker stack deploy --with-registry-auth -c studium.yml studium"
       args:
         chdir: "/home/{{ user }}/compose"
         executable: "/usr/bin/zsh"
