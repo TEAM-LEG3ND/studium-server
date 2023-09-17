@@ -3,9 +3,11 @@ import { UpdateMemberResponseDto } from './dto/update-member-response.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { MemberService } from './member.service';
 import { Controller, Get, Param, Patch, Body, Delete } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 

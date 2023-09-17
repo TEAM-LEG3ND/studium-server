@@ -5,8 +5,11 @@ import { GetApplyFormResponseDto } from './dto/get-apply-form-response.dto';
 import { CreateApplyFormResponseDto } from './dto/create-apply-form-response.dto';
 import { UpdateApplyFormDto } from './dto/update-apply-form.dto';
 import { UpdateApplyFormResponseDto } from './dto/update-apply-form-response.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class ApplyFormController {
   constructor(private readonly applyFormService: ApplyFormService) {}
 

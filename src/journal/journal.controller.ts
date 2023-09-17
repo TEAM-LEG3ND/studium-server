@@ -2,33 +2,36 @@ import { Controller, Get, Param, Post, Patch, Delete, Body } from '@nestjs/commo
 import { JournalService } from './journal.service';
 import { UpdateJournalDto } from './dto/update-journal.dto';
 import { CreateJournalDto } from './dto/create-journal.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class JournalController {
-    constructor(private readonly journalService: JournalService) {}
+  constructor(private readonly journalService: JournalService) {}
 
-    @Get()
-    findAll() {
-        return this.journalService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.journalService.findAll();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.journalService.findOne(+id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.journalService.findOne(+id);
+  }
 
-    @Post()
-    create(@Body() createJournalDto: CreateJournalDto) {
-        return this.journalService.create(createJournalDto);
-    }
+  @Post()
+  create(@Body() createJournalDto: CreateJournalDto) {
+    return this.journalService.create(createJournalDto);
+  }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateJournalDto: UpdateJournalDto) {
-        return this.journalService.update(+id, updateJournalDto);
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateJournalDto: UpdateJournalDto) {
+    return this.journalService.update(+id, updateJournalDto);
+  }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.journalService.remove(+id);
-    }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.journalService.remove(+id);
+  }
 }
