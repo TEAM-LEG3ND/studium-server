@@ -7,8 +7,11 @@ import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class StudyController {
   constructor(private readonly studyService: StudyService) {}
 

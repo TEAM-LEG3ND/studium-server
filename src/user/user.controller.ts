@@ -2,8 +2,11 @@ import { Body, Controller, Get, Post, Patch, Delete, Param, HttpCode } from '@ne
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -35,6 +38,6 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id') id: string) {
-      return this.userService.remove(+id);
+    return this.userService.remove(+id);
   }
 }
