@@ -13,8 +13,8 @@ export class BookmarkController {
     return this.bookmarkService.register(bookmarkStudyDto);
   }
 
-  @Get()
-  findEveryBookmarkedStudies(@Param('userId') id: number): Promise<GetStudyResponseDto[]> {
-    return this.bookmarkService.findAllBookmarkedStudies(id);
+  @Get(':userId')
+  findEveryBookmarkedStudies(@Param('userId') id: string): Promise<GetStudyResponseDto[]> {
+    return this.bookmarkService.findAllBookmarkedStudies(+id);
   }
 }
