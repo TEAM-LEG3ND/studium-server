@@ -201,11 +201,6 @@ export class StudyService {
     return journals.map((journal) => GetJournalResponseDto.fromJournal(journal));
   }
 
-  async findPendingMembers(id: number): Promise<GetUserResponseDto[]> {
-    // todo
-    return;
-  }
-
   async getStudiesSortByTime(): Promise<GetStudyResponseDto[]> {
     const studies = await this.prisma.study.findMany({
       include: {

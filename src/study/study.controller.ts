@@ -43,11 +43,6 @@ export class StudyController {
     return this.studyService.findOne(+id);
   }
 
-  @Get(':id')
-  findPendingMembers(@Param('id') id: string): Promise<GetUserResponseDto[]> {
-    return this.studyService.findPendingMembers(+id);
-  }
-
   @Get(':id/notices')
   findNotices(@Param('id') id: string): Promise<GetNoticeResponseDto[]> {
     return this.studyService.findNotices(+id);
