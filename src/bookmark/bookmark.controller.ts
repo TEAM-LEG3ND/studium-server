@@ -8,7 +8,7 @@ import { GetStudyResponseDto } from 'src/study/dto/get-study-response.dto';
 export class BookmarkController {
   constructor(private readonly bookmarkService: BookmarkService) {}
 
-  @Post()
+  @Post('register')
   registerAsBookmark(@Body() bookmarkStudyDto: BookmarkStudyDto): Promise<BookmarkStudyResponseDto> {
     return this.bookmarkService.register(bookmarkStudyDto);
   }
