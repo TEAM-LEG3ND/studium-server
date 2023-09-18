@@ -6,8 +6,7 @@ export function initSwaggerConfig(app: INestApplication): void {
     .setTitle('title example')
     .setDescription('description example')
     .setVersion('1.0.0')
-    .addServer('https://api.server.d0lim.com/studium')
-    .addServer('http://localhost:3000')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'Token' }, 'access-token')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -14,6 +14,7 @@ import { AnswerModule } from './answer/answer.module';
 import { TimeFrameModule } from './timeFrame/timeframe.module';
 import { NoticeModule } from './notice/notice.module';
 import { JournalModule } from './journal/journal.module';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JournalModule } from './journal/journal.module';
     AnswerModule,
     NoticeModule,
     JournalModule,
+    MemberModule,
     RouterModule.register([
       {
         path: 'internal/api/v1',
@@ -78,6 +80,10 @@ import { JournalModule } from './journal/journal.module';
       {
         path: 'api/v1/journal',
         module: JournalModule,
+      },
+      {
+        path: 'api/v1/member',
+        module: MemberModule,
       },
     ]),
   ],

@@ -8,7 +8,7 @@ import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
 import { StudiumException } from 'src/common/studium-exception';
 import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
-import { GetUserResponseDto } from 'src/user/dto/get-user-response.dto';
+import { MemberStatus, MemberType } from 'src/member/dto/enums';
 
 @Injectable()
 export class StudyService {
@@ -16,11 +16,12 @@ export class StudyService {
 
   async create(createStudyDto: CreateStudyDto): Promise<CreateStudyResponseDto> {
     const { tags = [], questions = [], ...data } = createStudyDto;
+    const userId = 1; // temporary user id
 
     const study = await this.prisma.study.create({
       data: {
         leader: {
-          connect: { id: 1 }, // temporary user id
+          connect: { id: userId },
         },
         tags: {
           connectOrCreate: tags.map((tag) => ({
@@ -41,6 +42,21 @@ export class StudyService {
         questions: true,
       },
     });
+
+    // Add the leader (user) as a member
+    await this.prisma.member.create({
+      data: {
+        study: {
+          connect: { id: study.id },
+        },
+        user: {
+          connect: { id: userId },
+        },
+        status: MemberStatus.active,
+        type: MemberType.leader,
+      },
+    });
+
     return CreateStudyResponseDto.fromStudy(study);
   }
 

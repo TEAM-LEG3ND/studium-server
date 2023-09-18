@@ -5,20 +5,20 @@
   become_user: "{{ user }}"
   tasks:
     - name: Log into private registry and force re-authorization
-      docker_login:
-        registry: "{{ registry_host }}"
-        username: "{{ registry_user }}"
-        password: "{{ registry_password }}"
-        reauthorize: yes
-    - name: Pull Docker Image
       become: True
-      shell: /usr/local/bin/docker compose pull studium-server
+      shell: "/usr/bin/docker login {{ registry_host }} -u {{ registry_user }} -p {{ registry_password }}"
       args:
-        chdir: /Users/{{ user }}/Server
-        executable: /bin/zsh
+        chdir: "/home/{{ user }}/compose"
+        executable: /usr/bin/zsh
+    - name: Pull image
+      become: True
+      shell: "/usr/bin/docker pull {{ registry_host }}/studium-server:latest"
+      args:
+        chdir: "/home/{{ user }}/compose"
+        executable: "/usr/bin/zsh"
     - name: Restart Container
       become: True
-      shell: /usr/local/bin/docker compose up -d studium-server --force-recreate
+      shell: "/usr/bin/zsh node-env.sh && source ~/.zshrc && /usr/bin/docker stack deploy --with-registry-auth -c studium.yml studium"
       args:
-        chdir: /Users/{{ user }}/Server
-        executable: /bin/zsh
+        chdir: "/home/{{ user }}/compose"
+        executable: "/usr/bin/zsh"

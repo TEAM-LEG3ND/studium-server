@@ -17,7 +17,6 @@ export class GetTimeFrameResponseDto {
     this.starttime = starttime;
     this.endtime = endtime;
   }
-  GetTimeFrameResponseDto;
 
   static fromTimeFrame(timeFrame: TimeFrame): GetTimeFrameResponseDto {
     const day = Days[timeFrame.day];
