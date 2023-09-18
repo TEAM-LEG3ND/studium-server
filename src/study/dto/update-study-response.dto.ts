@@ -2,7 +2,9 @@ import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
 import { CreateStudyResponseDto } from './create-study-response.dto';
 import { Study } from '@prisma/client';
 import { Location, getLocationEnumValue } from './enums';
+import { CreateQuestionDto } from 'src/question/dto/create-question.dto';
 import { GetQuestionResponseDto } from 'src/question/dto/get-question-response.dto';
+import { GetUserResponseDto } from 'src/user/dto/get-user-response.dto';
 
 export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   // You can add additional properties specific to the response, if needed.
@@ -11,6 +13,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   // constructor is optional if the superclass already has one that sets the properties
   constructor(
     id: number,
+    leader: GetUserResponseDto,
     createdAt: Date,
     updatedAt: Date,
     name: string,
@@ -31,6 +34,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
   ) {
     super(
       id,
+      leader,
       createdAt,
       updatedAt,
       name,
@@ -55,6 +59,7 @@ export class UpdateStudyResponseDto extends CreateStudyResponseDto {
     const location: Location = getLocationEnumValue(study.location);
     return new UpdateStudyResponseDto(
       study.id,
+      study['leader'],
       study.createdAt,
       study.updatedAt,
       study.name,

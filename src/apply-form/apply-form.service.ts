@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateApplyFormDto } from './dto/create-apply-form.dto';
 import { ApplyForm } from '@prisma/client';
@@ -6,13 +6,27 @@ import { CreateApplyFormResponseDto } from './dto/create-apply-form-response.dto
 import { GetApplyFormResponseDto } from './dto/get-apply-form-response.dto';
 import { UpdateApplyFormDto } from './dto/update-apply-form.dto';
 import { UpdateApplyFormResponseDto } from './dto/update-apply-form-response.dto';
+import { MemberStatus, MemberType } from 'src/member/dto/enums';
 
 @Injectable()
 export class ApplyFormService {
   constructor(private prisma: PrismaService) {}
 
   async create(createApplyFormDto: CreateApplyFormDto): Promise<CreateApplyFormResponseDto> {
-    const { userId, studyId, answers, ...data } = createApplyFormDto;
+    const { userId, studyId, answers, timeFrames, ...data } = createApplyFormDto;
+
+    // Check if the user has already applied to the same study
+    const existingApplyForm = await this.prisma.applyForm.findFirst({
+      where: {
+        userId,
+        studyId,
+      },
+    });
+
+    if (existingApplyForm) {
+      throw new ConflictException('User has already applied to this study.');
+    }
+
     const applyForm: ApplyForm = await this.prisma.applyForm.create({
       data: {
         user: { connect: { id: userId } },
@@ -23,14 +37,37 @@ export class ApplyFormService {
             question: { connect: { id: answer.questionId } },
           })),
         },
+        timeFrames: {
+          create: timeFrames.map((timeFrame) => ({
+            day: timeFrame.day,
+            starttime: timeFrame.starttime,
+            endtime: timeFrame.endtime,
+          })),
+        },
         ...data,
       },
       include: {
         answers: true,
         user: true,
         study: true,
+        timeFrames: true,
       },
     });
+
+    // Add user as a member
+    await this.prisma.member.create({
+      data: {
+        study: {
+          connect: { id: studyId },
+        },
+        user: {
+          connect: { id: userId },
+        },
+        status: MemberStatus.pending,
+        type: MemberType.member,
+      },
+    });
+
     return CreateApplyFormResponseDto.fromApplyForm(applyForm);
   }
 
@@ -38,6 +75,7 @@ export class ApplyFormService {
     const applyForms = await this.prisma.applyForm.findMany({
       include: {
         answers: true,
+        timeFrames: true,
       },
     });
     return applyForms.map((applyForm) => GetApplyFormResponseDto.fromApplyForm(applyForm));
@@ -48,13 +86,16 @@ export class ApplyFormService {
       where: { id },
       include: {
         answers: true,
+        user: true,
+        study: true,
+        timeFrames: true,
       },
     });
     return GetApplyFormResponseDto.fromApplyForm(study);
   }
 
   async update(id: number, updateApplyFormDto: UpdateApplyFormDto): Promise<UpdateApplyFormResponseDto> {
-    const { userId, studyId, answers, ...data } = updateApplyFormDto;
+    const { userId, studyId, answers, timeFrames, ...data } = updateApplyFormDto;
 
     const applyForm = await this.prisma.applyForm.update({
       where: { id },
@@ -66,10 +107,22 @@ export class ApplyFormService {
             question: { connect: { id: answer.questionId } },
           })),
         },
+        timeFrames: {
+          deleteMany: {},
+          create: timeFrames.map((timeFrame) => ({
+            day: timeFrame.day,
+            starttime: timeFrame.starttime,
+            endtime: timeFrame.endtime,
+          })),
+        },
         ...data,
       },
+
       include: {
         answers: true,
+        user: true,
+        study: true,
+        timeFrames: true,
       },
     });
 
@@ -78,11 +131,15 @@ export class ApplyFormService {
   async remove(id: number) {
     const applyFormToDelete = await this.prisma.applyForm.findUnique({
       where: { id },
-      include: { answers: true }, // Include associated answers
+      include: { answers: true, timeFrames: true },
     });
-    // Delete associated answers first
+
     await Promise.all(
       applyFormToDelete.answers.map((answer) => this.prisma.answer.delete({ where: { id: answer.id } })),
+    );
+
+    await Promise.all(
+      applyFormToDelete.timeFrames.map((timeFrame) => this.prisma.timeFrame.delete({ where: { id: timeFrame.id } })),
     );
 
     return await this.prisma.applyForm.delete({ where: { id } });

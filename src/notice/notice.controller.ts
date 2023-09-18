@@ -2,28 +2,36 @@ import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/commo
 import { NoticeService } from './notice.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class NoticeController {
-    constructor(private readonly noticeService: NoticeService) {}
+  constructor(private readonly noticeService: NoticeService) {}
 
-    @Get()
-    findAll() {
-        return this.noticeService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.noticeService.findAll();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.noticeService.findOne(+id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.noticeService.findOne(+id);
+  }
 
-    @Post()
-    create(@Body() createNoticeDto: CreateNoticeDto) {
-        return this.noticeService.create(createNoticeDto);
-    }
+  @Post()
+  create(@Body() createNoticeDto: CreateNoticeDto) {
+    return this.noticeService.create(createNoticeDto);
+  }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateNoticeDto: UpdateNoticeDto) {
-        return this.noticeService.update(+id, updateNoticeDto);
-    } 
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateNoticeDto: UpdateNoticeDto) {
+    return this.noticeService.update(+id, updateNoticeDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.noticeService.remove(+id);
+  }
 }

@@ -6,8 +6,12 @@ import { CreateStudyResponseDto } from './dto/create-study-response.dto';
 import { GetStudyResponseDto } from './dto/get-study-response.dto';
 import { UpdateStudyResponseDto } from './dto/update-study-response.dto';
 import { GetNoticeResponseDto } from 'src/notice/dto/get-notice-response.dto';
+import { GetJournalResponseDto } from 'src/journal/dto/get-journal-response.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ACCESS_TOKEN } from '../config/swagger-config';
 
 @Controller()
+@ApiBearerAuth(ACCESS_TOKEN)
 export class StudyController {
   constructor(private readonly studyService: StudyService) {}
 
@@ -26,6 +30,16 @@ export class StudyController {
     return this.studyService.getStudiesOnFire();
   }
 
+  @Get('sortTime')
+  getStudiesSortByTime(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesSortByTime();
+  }
+
+  @Get('sortViewCount')
+  getStudiesSortByViewCount(): Promise<GetStudyResponseDto[]> {
+    return this.studyService.getStudiesSortByViewCount();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<GetStudyResponseDto> {
     return this.studyService.findOne(+id);
@@ -36,15 +50,20 @@ export class StudyController {
     return this.studyService.findNotices(+id);
   }
 
+  @Get(':id/journals')
+  findJournals(@Param('id') id: string): Promise<GetJournalResponseDto[]> {
+    return this.studyService.findJournals(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudyDto: UpdateStudyDto): Promise<UpdateStudyResponseDto> {
     return this.studyService.update(+id, updateStudyDto);
   }
 
   @Patch(':id/increment-views')
-  incrementViewCount(@Param('id') id:string): Promise<UpdateStudyResponseDto> {
+  incrementViewCount(@Param('id') id: string): Promise<UpdateStudyResponseDto> {
     return this.studyService.incrementViewCount(+id);
-  } 
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
