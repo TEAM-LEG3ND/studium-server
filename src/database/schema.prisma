@@ -33,10 +33,6 @@ model Study {
   questions        Question[]
   leader           User        @relation(fields: [leaderId], references: [id])
   tags             Tag[]       @relation("StudyToTag")
-  questions        Question[]
-  applyForms       ApplyForm[]
-  notices          Notice[]
-  Bookmark         Bookmark[]
   journals         Journal[]
 }
 
@@ -52,8 +48,8 @@ model User {
   applyForms         ApplyForm[]
   Bookmark           Bookmark[]
   membersOf          Member[]
-  Study              Study[]
-  Bookmark           Bookmark[]
+  studyJoined        Study[]
+  journals           Journal[]
 }
 
 model Bookmark {
@@ -64,8 +60,6 @@ model Bookmark {
   studyId         Int
   userBookmarked  User     @relation(fields: [userId], references: [id])
   studyBookmarked Study    @relation(fields: [studyId], references: [id])
-  studyJoined        Study[]
-  journals           Journal[]
 }
 
 model Member {
@@ -129,16 +123,6 @@ model Notice {
   content   String
   studyId   Int
   study     Study    @relation(fields: [studyId], references: [id])
-}
-
-model Bookmark {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  userId    Int
-  studyId   Int
-  Study     Study    @relation(fields: [studyId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
 }
 
 model Journal {
