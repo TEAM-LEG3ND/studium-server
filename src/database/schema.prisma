@@ -20,7 +20,7 @@ model Study {
   recruitStartDate DateTime
   startDate        DateTime
   name             String
-  recruited        Int
+  recruited        Int         @default(1)
   locationDetail   String
   templateContent  String
   total            Int

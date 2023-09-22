@@ -50,6 +50,11 @@ export class StudyController {
     return this.studyService.findNotices(+id);
   }
 
+  @Get(':id/notice')
+  findNotice(@Param('id') id: string): Promise<GetNoticeResponseDto> {
+    return this.studyService.findNotice(+id);
+  }
+
   @Get(':id/journals')
   findJournals(@Param('id') id: string): Promise<GetJournalResponseDto[]> {
     return this.studyService.findJournals(+id);
