@@ -7,92 +7,105 @@ import { GetUserResponseDto } from './dto/get-user-response.dto';
 import { CreateUserResponseDto } from './dto/create-user-response.dto';
 import { UpdateUserResponseDto } from './dto/update-user-response.dto';
 import { StudiumException } from 'src/common/studium-exception';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private httpService: HttpService) {}
 
-    async findAll(): Promise<GetUserResponseDto[]> {
-        const users: User[] = await this.prisma.user.findMany();  
-        return users.map((user) => GetUserResponseDto.fromUser(user));
+  async findAll(): Promise<GetUserResponseDto[]> {
+    const users: User[] = await this.prisma.user.findMany();
+    return users.map((user) => GetUserResponseDto.fromUser(user));
+  }
+
+  async findOne(userId: number): Promise<GetUserResponseDto> {
+    if (isNaN(userId)) {
+      throw new BadRequestException(StudiumException.idFormatError);
     }
 
-    async findOne(userId: number): Promise<GetUserResponseDto>{
-        if (isNaN(userId)) {
-            throw new BadRequestException(StudiumException.idFormatError);
-        }
+    const user: User = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
 
-        const user: User = await this.prisma.user.findUnique({
-            where: { id: userId },
-        });
-
-        if (!user) {
-            throw new InternalServerErrorException(StudiumException.dataNotFound);
-        } 
-
-      return GetUserResponseDto.fromUser(user);
+    if (!user) {
+      throw new InternalServerErrorException(StudiumException.dataNotFound);
     }
 
-    async checkNickname(nickname: string) {
-        const user = await this.prisma.user.findUnique({ where: { nickname } });
-        return { available: !user && this.checkNicknameAvailability(nickname) };
+    return GetUserResponseDto.fromUser(user);
+  }
+
+  async checkNickname(nickname: string) {
+    const user = await this.prisma.user.findUnique({ where: { nickname } });
+    return { available: !user && this.checkNicknameAvailability(nickname) };
+  }
+
+  checkNicknameAvailability(nickname: string): boolean {
+    const reservedNicknames = ['admin', 'root', 'moderator'];
+
+    if (nickname.length < 3 || nickname.length > 20) {
+      return false;
     }
 
-    checkNicknameAvailability(nickname: string): boolean {
-        const reservedNicknames = [
-            'admin',
-            'root',
-            'moderator',
-        ];
-
-        if (nickname.length < 3 || nickname.length > 20) {
-            return false;
-        }
-
-        if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
-            return false;
-        }
-
-        if(reservedNicknames.includes(nickname)) {
-            return false;
-        }
-
-        return true;
+    if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
+      return false;
     }
 
-  async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
-      const user: User = await this.prisma.user.create({
-          data: {
-              ...createUserDto,
-          },
-      });
+    if (reservedNicknames.includes(nickname)) {
+      return false;
+    }
 
-      return CreateUserResponseDto.fromUser(user);
+    return true;
+  }
+
+  async create(universalAccountId: string, createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
+    const addServiceRequest = {
+      account_id: universalAccountId,
+      service_type: 'STUDIUM',
+    };
+
+    try {
+      await firstValueFrom(
+        this.httpService.post('https://turnstile.server.d0lim.com/internal/api/v1/account/service', addServiceRequest),
+      );
+    } catch (e) {
+      throw new InternalServerErrorException('Failed to signing up to account server');
+    }
+
+    const user: User = await this.prisma.user.create({
+      data: {
+        manners: 0,
+        universalAccountId,
+        ...createUserDto,
+      },
+    });
+
+    return CreateUserResponseDto.fromUser(user);
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<UpdateUserResponseDto> {
-      const user: GetUserResponseDto = await this.findOne(userId);
-      const { nickname } = updateUserDto;
+    const user: GetUserResponseDto = await this.findOne(userId);
+    const { nickname } = updateUserDto;
 
-      const ok = (await this.checkNickname(nickname)).available;
+    const ok = (await this.checkNickname(nickname)).available;
 
-      if (!ok) {
-          throw new InternalServerErrorException();
-      }
+    if (!ok) {
+      throw new InternalServerErrorException();
+    }
 
-      const updatedUser: User = await this.prisma.user.update({
-          where: { id: user['id'] },
-          data: updateUserDto,
-      });
+    const updatedUser: User = await this.prisma.user.update({
+      where: { id: user['id'] },
+      data: updateUserDto,
+    });
 
-      return UpdateUserResponseDto.fromUser(updatedUser);
+    return UpdateUserResponseDto.fromUser(updatedUser);
   }
 
   async remove(id: number): Promise<void> {
-      const user = await this.findOne(id);
-      await this.prisma.user.delete({
-          where: { id: user['id'] },
-      });
-      return;
+    const user = await this.findOne(id);
+    await this.prisma.user.delete({
+      where: { id: user['id'] },
+    });
+    return;
   }
 }
