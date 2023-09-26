@@ -10,7 +10,7 @@ export class WarmupService implements OnApplicationBootstrap {
 
   onApplicationBootstrap() {
     const publicEndpoints = ['/test/public'];
-    const draftEndpoints = ['/test/draft'];
+    const draftEndpoints = ['/api/v1/user'];
     const basePath = '/studium';
 
     const requestBody = {
