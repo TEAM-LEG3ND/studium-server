@@ -205,7 +205,9 @@ export class StudyService {
       },
     });
 
-    return GetNoticeResponseDto.fromNotice(notice);
+    if (notice)
+      return GetNoticeResponseDto.fromNotice(notice);
+    return;
   }
 
   async findJournals(id: number): Promise<GetJournalResponseDto[]> {
