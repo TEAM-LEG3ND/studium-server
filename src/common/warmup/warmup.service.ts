@@ -9,7 +9,7 @@ export class WarmupService implements OnApplicationBootstrap {
   constructor(private readonly httpService: HttpService) {}
 
   onApplicationBootstrap() {
-    const publicEndpoints = ['/test/public'];
+    const publicEndpoints = ['/api/v1/study/on-fire', '/api/v1/study'];
     const draftEndpoints = ['/api/v1/user'];
     const basePath = '/studium';
 
