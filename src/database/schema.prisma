@@ -52,6 +52,16 @@ model User {
   journals           Journal[]
 }
 
+model Bookmark {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          Int
+  studyId         Int
+  userBookmarked  User     @relation(fields: [userId], references: [id])
+  studyBookmarked Study    @relation(fields: [studyId], references: [id])
+}
+
 model Member {
   id      Int          @id @default(autoincrement())
   studyId Int
@@ -113,16 +123,6 @@ model Notice {
   content   String
   studyId   Int
   study     Study    @relation(fields: [studyId], references: [id])
-}
-
-model Bookmark {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  userId    Int
-  studyId   Int
-  Study     Study    @relation(fields: [studyId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
 }
 
 model Journal {

@@ -13,6 +13,7 @@ import { ApplyFormModule } from './apply-form/apply-form.module';
 import { AnswerModule } from './answer/answer.module';
 import { TimeFrameModule } from './timeFrame/timeframe.module';
 import { NoticeModule } from './notice/notice.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 import { JournalModule } from './journal/journal.module';
 import { MemberModule } from './member/member.module';
 
@@ -22,6 +23,7 @@ import { MemberModule } from './member/member.module';
     InternalUserModule,
     UserModule,
     StudyModule,
+    BookmarkModule,
     TagModule,
     QuestionModule,
     ApplyFormModule,
@@ -76,6 +78,10 @@ import { MemberModule } from './member/member.module';
       {
         path: 'api/v1/notice',
         module: NoticeModule,
+      },
+      {
+        path: 'api/v1/bookmark',
+        module: BookmarkModule,
       },
       {
         path: 'api/v1/journal',
